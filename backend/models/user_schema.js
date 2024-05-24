@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt")
 
 const userSchema = new mongoose.Schema(
   {
@@ -10,6 +11,18 @@ const userSchema = new mongoose.Schema(
   { timestamps: true, collection: "users" }
 );
 
-const Users = mongoose.model("Users", userSchema);
+userSchema.pre('save', async function(next) {
+    try {
+        if (this.isNew) {
+            const salt = await bcrypt.genSalt(10);
+            this.password = await bcrypt.hash(this.password, salt);
+        }
+        next();
+    } catch (error) {
+        next(error)
+    }
+})
 
-export default Users;
+const User = mongoose.model("Users", userSchema);
+
+module.exports = User;
