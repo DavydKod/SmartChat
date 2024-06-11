@@ -1,47 +1,17 @@
-
 import React from 'react';
-import logo from '../images/logo.png';
-import RegisterForm from "../components/auth/RegisterForm"; // Import the logo image
+import RegisterForm from "../components/auth/RegisterForm";
+
 
 const Signup = () => {
     return (
-        <div
-            className="
-                flex
-                min-h-full // Use to make sure the container takes the full height of the screen
-                flex-col // Center items vertically
-                justify-center // Center items horizontally
-                py-12
-                sm:px-6
-                lg:px-8
-            "
-        >
-            <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                <img
-                    alt="Logo"
-                    height="48"
-                    width="48"
-                    src={logo}
-                    style={{
-                        display: 'block',
-                        marginLeft: 'auto',
-                        marginRight: 'auto'
-                    }} // Set marginLeft and marginRight to auto for centering horizontally
-                />
-                <h2
-                    className="
-                        mt-6
-                        text-center
-                        text-3xl
-                        font-bold
-                        tracjing-tight
-                        text-gray-900
-                    "
-                >
-                    Sign in to your account
-                </h2>
+        <div className="flex flex-col items-center justify-center min-h-screen w-full p-8">
+
+            <div className="mt-8 w-full sm:max-w-md sm:mx-auto">
+
+                <RegisterForm/>
             </div>
-            <RegisterForm></RegisterForm>
+            <div className="mt-auto"></div>
+
         </div>
     );
 }

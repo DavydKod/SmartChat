@@ -1,4 +1,5 @@
-import friendAvatar from "../../images/gl.png"
+//import friendAvatar from "../../images/gl.png"
+import friendAvatar from "../../images/avatar.png"
 const ChatList = () => {
 
     return (
@@ -7,7 +8,7 @@ const ChatList = () => {
             <div className="item">
                 <img src={friendAvatar} alt=""/>
                 <div className="texts">
-                    <span>Glyba</span>
+                    <span>Mike</span>
                     <p>Hello!</p>
                 </div>
             </div>
@@ -15,7 +16,7 @@ const ChatList = () => {
             <div className="item">
                 <img src={friendAvatar} alt=""/>
                 <div className="texts">
-                    <span>Glyba</span>
+                    <span>Andrew</span>
                     <p>Hello!</p>
                 </div>
             </div>
@@ -23,7 +24,7 @@ const ChatList = () => {
             <div className="item">
                 <img src={friendAvatar} alt=""/>
                 <div className="texts">
-                    <span>Glyba</span>
+                    <span>Vlad</span>
                     <p>Hello!</p>
                 </div>
             </div>
@@ -31,7 +32,7 @@ const ChatList = () => {
             <div className="item">
                 <img src={friendAvatar} alt=""/>
                 <div className="texts">
-                    <span>Glyba</span>
+                    <span>Henry</span>
                     <p>Hello!</p>
                 </div>
             </div>
@@ -39,7 +40,7 @@ const ChatList = () => {
             <div className="item">
                 <img src={friendAvatar} alt=""/>
                 <div className="texts">
-                    <span>Glyba</span>
+                    <span>John</span>
                     <p>Hello!</p>
                 </div>
             </div>
@@ -47,7 +48,7 @@ const ChatList = () => {
             <div className="item">
                 <img src={friendAvatar} alt=""/>
                 <div className="texts">
-                    <span>Glyba</span>
+                    <span>Andy</span>
                     <p>Hello!</p>
                 </div>
             </div>
@@ -55,7 +56,7 @@ const ChatList = () => {
             <div className="item">
                 <img src={friendAvatar} alt=""/>
                 <div className="texts">
-                    <span>Glyba</span>
+                    <span>Alex</span>
                     <p>Hello!</p>
                 </div>
             </div>

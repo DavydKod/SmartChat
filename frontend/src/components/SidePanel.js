@@ -1,6 +1,7 @@
 import UserInfo from "./sidePanel/UserInfo";
 import SearchBar from "./sidePanel/SearchBar";
 import ChatList from "./sidePanel/ChatList";
+import Chats from "./sidePanel/chats/Chats";
 
 const SidePanel = () => {
 
@@ -8,7 +9,8 @@ const SidePanel = () => {
         <div className="sidePanel">
             <UserInfo />
             <SearchBar />
-            <ChatList />
+            <Chats />
+            {/*<ChatList />*/}
         </div>
 
     );

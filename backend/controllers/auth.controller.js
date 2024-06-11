@@ -21,6 +21,7 @@ module.exports.Signup = async (req, res, next) => {
                 name: newUser.name,
                 email: newUser.email,
                 avatar: newUser.avatar,
+                token: accessToken,
             },
         });
     } catch (error) {
@@ -43,6 +44,7 @@ module.exports.Login = async (req, res, next) => {
                 name: user.name,
                 email: user.email,
                 avatar: user.avatar,
+                token: accessToken,
             },
         });
     } catch (error) {
