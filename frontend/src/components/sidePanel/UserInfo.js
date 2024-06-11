@@ -1,22 +1,30 @@
 import userAvatar from '../../images/avatar.png';
-import moreIcon from "../../images/menu.png"
-import React from "react";
-
+import moreIcon from "../../images/menu.png";
+import React, {useState} from "react";
+import DropMenu from "./DropMenu";
+import {useSelector} from "react-redux";
 
 const UserInfo = () => {
+    const {user} = useSelector((state) => state.user);
+
+    const [showMenu, setShowMenu] = useState(false);
 
     return (
         <div className="userInfo">
             <div className="user">
-                <img src={userAvatar} alt="Description" className="w-12 h-12 rounded-full object-cover"/>
-                <h2>Alex</h2>
+                <img src={userAvatar} alt="" className="w-12 h-12 rounded-full object-cover"/>
+                <h2>{user.name}</h2>
             </div>
-            <div className="icons">
-                <img src={moreIcon} alt=""/>
-            </div>
-
+            <li className="icons relative" onClick={() => setShowMenu((prev) => !prev)}>
+                <button className="">
+                    <img src={moreIcon} alt=""/>
+                </button>
+                {showMenu ? <DropMenu/> : null}
+            </li>
         </div>
     );
 }
 
 export default UserInfo;
+
+
