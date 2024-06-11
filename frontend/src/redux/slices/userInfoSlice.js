@@ -28,6 +28,9 @@ export const userInfoSlice = createSlice({
                 token: '',
             };
         },
+        changeStatus: (state, action) => {
+            state.status = action.payload;
+        },
     },
 
     extraReducers(builder) {
@@ -47,5 +50,5 @@ export const userInfoSlice = createSlice({
     },
 });
 
-export const { signOut } = userInfoSlice.actions;
+export const { signOut, changeStatus } = userInfoSlice.actions;
 export default userInfoSlice.reducer;
