@@ -1,4 +1,5 @@
-import friendAvatar from "../images/gl.png"
+//import friendAvatar from "../images/gl.png"
+import friendAvatar from "../images/avatar.png"
 import phoneCall from "../images/phone-call.png"
 import videoCall from "../images/video-call.png"
 import info from "../images/information.png"
@@ -30,13 +31,13 @@ const ChatWindow = () => {
                 <div className="user">
                     <img src={friendAvatar} alt="" className=""/>
                     <div className="texts">
-                        <span>Glyba</span>
+                        <span>Andy</span>
                         <p>Last seen 5 days ago</p>
                     </div>
                 </div>
                 <div className="icons">
-                    <img src={phoneCall} alt=""/>
-                    <img src={videoCall} alt=""/>
+                    {/*<img src={phoneCall} alt=""/>
+                    <img src={videoCall} alt=""/>*/}
                     <img src={info} alt=""/>
                 </div>
             </div>

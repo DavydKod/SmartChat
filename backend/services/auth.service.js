@@ -1,5 +1,5 @@
 const createError = require("http-errors");
-const User_schema = require("../models/user_schema");
+const User_schema = require("../models/userModel");
 const {compare} = require("bcrypt");
 
 module.exports.CreateUserFunction = async (userData) => {
