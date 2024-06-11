@@ -15,10 +15,10 @@ const Chat = ({convo}) => {
                 </div>
 
                 {/*Right*/}
-                <div className="add-chat">
-                    <span className="add-chat">
+                <div className="texts">
+                    <p className="flex-end mt-8 ml-10">
                         {convo.lastMessage?.createdAt}
-                    </span>
+                    </p>
                 </div>
             </div>
 
