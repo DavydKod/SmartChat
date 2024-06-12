@@ -81,6 +81,44 @@
     .center{
         padding: 20px;
         flex: 1;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .message{
+            max-width: 70%;
+            display: flex;
+            align-self: flex-start;
+            gap: 20px;
+
+            &.own{
+                align-self: flex-end;
+
+                .texts{
+                    p {
+                        background-color: #5183fe;
+                    }
+                }
+            }
+
+            .texts{
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                p {
+                    padding: 10px;
+                    background-color: rgba(17, 25, 40, 0.30);
+                    border-radius: 10px;
+                }
+
+                .span{
+                    font-size: 10px;
+                }
+            }
+        }
     }
 
     .bottom{
