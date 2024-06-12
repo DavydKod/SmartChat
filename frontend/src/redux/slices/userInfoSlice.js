@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signIn } from "../actions/userActions";
+import {signIn, SignUp} from "../actions/userActions";
 
 const initialState = {
     status: 'idle',
@@ -46,7 +46,21 @@ export const userInfoSlice = createSlice({
             .addCase(signIn.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload;
+            })
+
+            .addCase(SignUp.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(SignUp.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.error = null;
+                state.user = action.payload.user;
+            })
+            .addCase(SignUp.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload;
             });
+
     },
 });
 

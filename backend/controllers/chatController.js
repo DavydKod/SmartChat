@@ -1,23 +1,38 @@
 const chatModel = require("../models/chatModel")
 
 const createChat = async (req, res) => {
-    const { senderId, receiverId } = req.body;
+    const userId = req.params.userId;
+    const { receiverId } = req.body;
     try {
-        // check if a chat already exists
-        const chat = await chatModel.findOne({
-            members: { $all: [senderId, receiverId] },
+        // Check if a chat already exists
+        let chat = await chatModel.findOne({
+            members: { $all: [userId, receiverId] },
         });
 
-        if (chat) return res.status(200).json(chat);
+        if (chat) {
+            // Populate members' and lastMessage information if chat exists
+            chat = await chatModel.findById(chat._id)
+                .populate('members', '-password')
+                .populate({
+                    path: 'lastMessage',
+                    populate: {
+                        path: 'senderID',
+                        select: 'name email avatar'
+                    }
+                });
 
+            return res.status(200).json(chat);
+        }
+
+        // Create a new chat if it doesn't exist
         const newChat = new chatModel({
             name: "chat Name",
-            members: [senderId, receiverId],
+            members: [userId, receiverId],
         });
 
         const savedChat = await newChat.save();
 
-        // Populate members' information
+        // Populate members' and lastMessage information for the new chat
         const populatedChat = await chatModel.findById(savedChat._id)
             .populate('members', '-password');
 
@@ -26,6 +41,9 @@ const createChat = async (req, res) => {
         res.status(500).json(error);
     }
 };
+
+module.exports = { createChat };
+
 
 
 const userChats = async (req, res) => {

@@ -1,22 +1,23 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import logo from "../../images/logo2.jpg";
+import {useNavigate} from "react-router-dom";
+
+import { useDispatch, useSelector } from "react-redux";
+import {SignUp} from "../../redux/actions/userActions";
 
 const SignupForm = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const { status, error } = useSelector((state) => state.user);
 
-    const onSubmit = (data) => {
-        axios.post('http://localhost:4000/api/auth/signup', data) // Change '/api/signup' to your API endpoint
-            .then(response => {
-                console.log('Signup successful:', response.data);
-                // Redirect to home page or perform any other action after successful signup
-                window.location.href = '/';
-            })
-            .catch(error => {
-                console.error('Signup failed:', error);
-                // Handle signup failure
-            });
+    const onSubmit = async (values) => {
+        let res = await dispatch(SignUp({ ...values }));
+        console.log(res);
+        if (res?.payload?.user) {
+            navigate("/chat");
+        }
     };
 
     return (
