@@ -1,9 +1,9 @@
-import UserInfo from "./sidePanel/UserInfo";
-import SearchBar from "./sidePanel/search/SearchBar";
-import ChatList from "./sidePanel/ChatList";
-import Chats from "./sidePanel/chats/Chats";
+import UserInfo from "./UserInfo";
+import SearchBar from "./search/SearchBar";
+import ChatList from "./ChatList";
+import Chats from "./chats/Chats";
 import {useState} from "react";
-import SearchResults from "./sidePanel/search/SearchResults";
+import SearchResults from "./search/SearchResults";
 
 const SidePanel = () => {
     const [searchResults, setSearchResults] = useState([]);

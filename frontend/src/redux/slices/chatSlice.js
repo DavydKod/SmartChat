@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {getChats} from "../actions/chatActions";
+import {createChat, getChatMessages, getChats} from "../actions/chatActions";
 
 
 
@@ -9,6 +9,7 @@ const initialState = {
     error: null,
     chats: [],
     currentChat: {},
+    messages: [],
 };
 
 export const chatSlice = createSlice({
@@ -23,13 +24,39 @@ export const chatSlice = createSlice({
         builder
             .addCase(getChats.pending, (state) => {
             state.status = 'loading';
-        })
+            })
             .addCase(getChats.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.chats = action.payload;
                 state.error = null;
             })
             .addCase(getChats.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+
+            .addCase(createChat.pending, (state) => {
+                    state.status = 'loading';
+            })
+            .addCase(createChat.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.currentChat = action.payload;
+                state.error = null;
+            })
+            .addCase(createChat.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+
+            .addCase(getChatMessages.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(getChatMessages.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.messages = action.payload;
+                state.error = null;
+            })
+            .addCase(getChatMessages.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
             });

@@ -17,3 +17,40 @@ export const getChats = createAsyncThunk(
         }
     }
 );
+
+export const createChat = createAsyncThunk(
+    'chats/create',
+    async (values, thunkAPI) => {
+        const {token, userId, receiverId} = values
+        try {
+            const response = await axios.post(`http://localhost:4000/api/chat//openChat/${userId}`,
+                {receiverId},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const getChatMessages = createAsyncThunk(
+    'chat/messages',
+    async (values, thunkAPI) => {
+        const {token, chatID} = values
+        try {
+            const response = await axios.get(`http://localhost:4000/api/message/getMessages/${chatID}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+            return response.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);

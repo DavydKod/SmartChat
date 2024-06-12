@@ -1,17 +1,35 @@
 //import friendAvatar from "../images/gl.png"
-import friendAvatar from "../images/avatar.png"
-import phoneCall from "../images/phone-call.png"
-import videoCall from "../images/video-call.png"
-import info from "../images/information.png"
-import emojiIcon from "../images/emoji.png"
-import attachments from "../images/attachment.png"
-import sendButton from "../images/send-button.png"
+import friendAvatar from "../../images/avatar.png"
+import phoneCall from "../../images/phone-call.png"
+import videoCall from "../../images/video-call.png"
+import info from "../../images/information.png"
+import emojiIcon from "../../images/emoji.png"
+import attachments from "../../images/attachment.png"
+import sendButton from "../../images/send-button.png"
 
 import EmojiPicker from "emoji-picker-react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import Header from "./Header";
+import Center from "./Center";
+import {useDispatch, useSelector} from "react-redux";
+import {getChatMessages} from "../../redux/actions/chatActions";
 
 
 const ChatWindow = () => {
+    const dispatch = useDispatch();
+    const {currentChat, messages} = useSelector((state) => state.chats);
+    const {user} = useSelector((state) => state.user);
+    const values = {
+        token: user.token,
+        chatID: currentChat?._id,
+    };
+
+    useEffect(() => {
+        if (currentChat?._id) {
+            dispatch(getChatMessages(values));
+        }
+    }, [currentChat]);
+    console.log("msg: ", messages);
 
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("");
@@ -27,22 +45,9 @@ const ChatWindow = () => {
     return (
         <div className="chatWindow">
 
-            <div className="top">
-                <div className="user">
-                    <img src={friendAvatar} alt="" className=""/>
-                    <div className="texts">
-                        <span>Andy</span>
-                        <p>Last seen 5 days ago</p>
-                    </div>
-                </div>
-                <div className="icons">
-                    {/*<img src={phoneCall} alt=""/>
-                    <img src={videoCall} alt=""/>*/}
-                    <img src={info} alt=""/>
-                </div>
-            </div>
+            <Header />
 
-            <div className="center"></div>
+            <Center />
 
             <div className="bottom">
                 <div className="icons">
