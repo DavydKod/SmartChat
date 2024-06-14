@@ -5,8 +5,8 @@ const { createMessage, populateMessage, getChatMessages } = require('../services
 
 const sendMessage = async (req, res, next) => {
     try {
-        //const userID = req.user.userId;
-        const { userID, chatID, message, content } = req.body;
+        const userID = req.user._id;
+        const { chatID, message, content } = req.body;
         if (!chatID || (!message && !content)) {
             res.status(200).json("Error");
         }
