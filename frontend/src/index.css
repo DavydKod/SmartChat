@@ -292,6 +292,23 @@
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+.center::-webkit-scrollbar {
+    width: 8px;
+}
+
+.center::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.center::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.center::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
 
 
 
