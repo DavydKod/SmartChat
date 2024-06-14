@@ -1,5 +1,5 @@
-import friendAvatar from "../../images/avatar.png";
-import info from "../../images/information.png";
+import friendAvatar from "../../../images/avatar.png";
+import info from "../../../images/information.png";
 import {useSelector} from "react-redux";
 
 

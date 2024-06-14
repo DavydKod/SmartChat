@@ -40,7 +40,7 @@ module.exports.AuthMiddleware = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        req.user = await User.findById(decoded.userId).select('-password'); // Fetch user data without the password
+        req.user = await User.findById(decoded.userId).select('-password');
         next();
     } catch (err) {
         console.error('Token is not valid', err);
