@@ -19,19 +19,6 @@ const AuthForm = () => {
         }
     };
 
-    /*const onSubmit = (data) => {
-        axios.post('http://localhost:4000/api/auth/login', data) // Change '/api/login' to your API endpoint
-            .then(response => {
-                console.log('Login successful:', response.data);
-                // Add logic to handle successful login
-                window.location.href = 'http://localhost:4000/signup';
-            })
-            .catch(error => {
-                console.error('Login failed:', error);
-                // Add logic to handle login failure
-            });
-    };*/
-
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
             <div className="flex flex-col items-center w-full sm:max-w-md">

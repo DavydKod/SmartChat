@@ -11,7 +11,7 @@ const Chats = () => {
                 {chats && chats
                     .filter((c) => c.lastMessage || c._id === currentChat._id)
                     .map((convo) => (
-                    <Chat convo={convo} key={convo._id} />
+                    <Chat chat={convo} key={convo._id} />
                 ))}
             </ul>
 

@@ -17,6 +17,7 @@ const Contact = ( { contact, setSearchResults }) => {
     const openChat = async () => {
         console.log("id:",contact._id);
         await dispatch(createChat(values));
+        setSearchResults([]);
     };
 
     return (

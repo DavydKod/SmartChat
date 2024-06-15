@@ -1,7 +1,7 @@
+import dateHandler from "../../utils/msgDate";
 
 
-
-const Message = ({ message, author }) => {
+const Message = ({ message, time, author }) => {
 
 
 
@@ -14,7 +14,7 @@ const Message = ({ message, author }) => {
                 <p>{message}</p>
 
                 <span className="text-xs text-black">
-                    1 min ago
+                    {dateHandler(time)}
                 </span>
             </div>
 

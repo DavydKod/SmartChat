@@ -52,9 +52,9 @@ const Bottom = () => {
             onSubmit={(e) => handleSubmit(e)}
             className="bottom">
 
-            <div className="icons">
+            {/*<div className="icons">
                 <img src={attachments} alt="" />
-            </div>
+            </div>*/}
 
             <input
                 type="text"
