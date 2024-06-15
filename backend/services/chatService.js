@@ -1,8 +1,9 @@
 const createError = require("http-errors");
+const mongoose = require("mongoose");
 const chatModel = require('../models/chatModel')
 const userModel = require('../models/userModel')
 
-const doesConversationExist = async (
+/*const doesConversationExist = async (
     sender_id,
     receiver_id,
     isGroup
@@ -44,9 +45,63 @@ const doesConversationExist = async (
 
         return convo;
     }
+};*/
+
+const createChatService = async (userId, receiverId) => {
+    /*if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(receiverId)) {
+        throw new Error("Invalid userId or receiverId");
+    }*/
+    try {
+
+        // Convert userId and receiverId to ObjectId
+        const userObjectId = userId;
+        const receiverObjectId = receiverId;
+
+        // Check if a chat already exists
+        let chat = await chatModel.findOne({
+            'members.user': { $all: [userObjectId, receiverObjectId] },
+            isGroup: false
+        });
+
+        if (chat) {
+            // Populate members' and lastMessage information if chat exists
+            chat = await chatModel.findById(chat._id)
+                .populate('members.user', '-password')
+                .populate({
+                    path: 'lastMessage',
+                    populate: {
+                        path: 'senderID',
+                        select: 'name tag email avatar'
+                    }
+                });
+
+            return chat;
+        }
+
+        // Create a new chat if it doesn't exist
+        const newChat = new chatModel({
+            name: "chat Name",
+            isGroup: false,
+            members: [
+                { user: userObjectId, role: 'owner' },
+                { user: receiverObjectId, role: 'user' }
+            ],
+        });
+
+        const savedChat = await newChat.save();
+
+        // Populate members' and admins' information for the new chat
+        return await chatModel.findById(savedChat._id)
+            .populate('members.user', '-password');
+
+    } catch (error) {
+        console.error("Error in createChatService:", error);
+        throw new Error("Cannot open or creat a new chat");
+    }
 };
 
-const createConversation = async (data) => {
+
+/*const createConversation = async (data) => {
     const newConvo = await chatModel.create(data);
     if (!newConvo)
         throw createError("Oops...Something went wrong !");
@@ -87,7 +142,7 @@ const getUserConversations = async (user_id) => {
             throw createError("Oops...Something went wrong !");
         });
     return conversations;
-};
+};*/
 
 const updateLastMessage = async (convo_id, msg) => {
     const updatedConvo = await chatModel.findByIdAndUpdate(convo_id, {
@@ -100,4 +155,4 @@ const updateLastMessage = async (convo_id, msg) => {
     return updatedConvo;
 };
 
-module.exports = { doesConversationExist, createConversation, populateConversation, getUserConversations, updateLastMessage}
+module.exports = { createChatService, updateLastMessage}

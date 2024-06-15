@@ -1,5 +1,21 @@
 const mongoose = require("mongoose");
 
+const memberSchema = new mongoose.Schema(
+    {
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
+        role: {
+            type: String,
+            enum: ['user', 'admin', 'owner'],
+            default: 'user'
+        }
+    },
+    { _id: false }
+);
+
 const chatSchema = new mongoose.Schema(
     {
         name: {
@@ -10,20 +26,7 @@ const chatSchema = new mongoose.Schema(
             type: Boolean,
             default: false
         },
-        members: [
-            {
-                user: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'User',
-                    required: true
-                },
-                role: {
-                    type: String,
-                    enum: ['user', 'admin', 'owner'],
-                    default: 'user'
-                }
-            }
-        ],
+        members: [memberSchema],
         lastMessage: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Message',

@@ -1,15 +1,9 @@
 import Contact from "./Contact";
 
-
-const SearchResults = ({ searchResults, setSearchResults, setSearchPerformed }) => {
-
+const SearchResults = ({ searchResults, setSearchResults }) => {
 
     return (
         <div className="chatList">
-            {/*<div className="user">
-                <h1 className="ml-1 border-b">Contacts</h1>
-            </div>*/}
-            {/*Results*/}
             <ul>
                 {
                     searchResults && searchResults.map((user)=>
@@ -17,7 +11,6 @@ const SearchResults = ({ searchResults, setSearchResults, setSearchPerformed }) 
                         contact={user}
                         key={user._id}
                         setSearchResults={setSearchResults}
-                        setSearchPerformed={setSearchPerformed}
                     />
                     )
                 }

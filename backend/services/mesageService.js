@@ -24,7 +24,7 @@ const populateMessage = async (id) => {
             select: "name isGroup members",
             model: "Chat",
             populate: {
-                path: "members",
+                path: "members.user",
                 select: "name tag email avatar",
                 model: "User",
             },

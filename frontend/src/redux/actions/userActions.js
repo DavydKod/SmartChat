@@ -20,7 +20,7 @@ export const SignUp = createAsyncThunk(
     "auth/signUp",
     async (values, thunkAPI) => {
         try {
-            const response = await axios.post(`http://localhost:4000/api/auth/signup`, {
+            const response = await axios.post(`http://localhost:4000/api/auth/register`, {
                 ...values,
             });
             return response.data;

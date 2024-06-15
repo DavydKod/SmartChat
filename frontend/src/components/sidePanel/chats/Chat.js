@@ -7,7 +7,7 @@ const Chat = ({convo}) => {
     const dispatch = useDispatch();
     const { user } = useSelector((state)=>state.user)
     const users = convo.members;
-    const receiverId = users[0]._id === user._id ? users[1]._id : users[0]._id;
+    const receiverId = users[0].user._id === user._id ? users[1].user._id : users[0].user._id;
 
     const values = {
         userId: user._id,
