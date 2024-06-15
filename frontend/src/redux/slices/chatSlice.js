@@ -2,8 +2,6 @@ import {createSlice} from "@reduxjs/toolkit";
 import {createChat, getChatMessages, getChats, sendMessage} from "../actions/chatActions";
 
 
-
-
 const initialState = {
     status: "idle",
     error: null,

@@ -16,6 +16,7 @@ const Center = () => {
                 messages && messages.map((message)=> (
                     <Message
                         message={message.text}
+                        time={message.createdAt}
                         key={message._id}
                         author={user._id===message.senderID._id}/>
                 ))

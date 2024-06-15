@@ -268,8 +268,15 @@
                 font-weight: 300;
             }
         }
+
     }
 
+}
+
+
+.date-time-container {
+    align-self: flex-start; /* Align date/time to the start of the flex container */
+    margin-top: 0.2rem; /* Add some margin to the top */
 }
 
 /* Add custom scrollbar styles */
