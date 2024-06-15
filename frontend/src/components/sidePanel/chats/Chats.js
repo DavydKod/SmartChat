@@ -3,12 +3,14 @@ import Chat from "./Chat";
 
 
 const Chats = () => {
-    const { chats } = useSelector((state) => state.chats);
+    const { chats, currentChat } = useSelector((state) => state.chats);
 
     return (
         <div className="chatList">
             <ul>
-                {chats && chats.map((convo) => (
+                {chats && chats
+                    .filter((c) => c.lastMessage || c._id === currentChat._id)
+                    .map((convo) => (
                     <Chat convo={convo} key={convo._id} />
                 ))}
             </ul>

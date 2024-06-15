@@ -4,12 +4,12 @@ const router = express.Router();
 const authRoutes = require('./authRoute')
 const chatRoutes = require('./chatRoute')
 const messageRoutes = require('./messageRoute')
-const searchRoutes = require('./searchRoute')
+const userRoutes = require('./userRoute')
 
 
 router.use('/auth', authRoutes);
 router.use('/chat', chatRoutes);
 router.use('/message', messageRoutes);
-router.use('/search', searchRoutes);
+router.use('/user', userRoutes);
 
 module.exports = router;

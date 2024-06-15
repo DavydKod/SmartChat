@@ -16,7 +16,7 @@ const populateMessage = async (id) => {
     let msg = await MessageModel.findById(id)
         .populate({
             path: "senderID",
-            select: "name avatar",
+            select: "name tag avatar",
             model: "User",
         })
         .populate({
@@ -25,7 +25,7 @@ const populateMessage = async (id) => {
             model: "Chat",
             populate: {
                 path: "members",
-                select: "name email avatar",
+                select: "name tag email avatar",
                 model: "User",
             },
         });
@@ -37,7 +37,7 @@ const populateMessage = async (id) => {
 
 const getChatMessages = async (chatID) => {
     const messages = await MessageModel.find({ chatID: chatID })
-        .populate("senderID", "name email avatar")
+        .populate("senderID", "name tag email avatar")
         .populate("chatID");
     if (!messages) {
         throw createError("Error: Cannot get messages")

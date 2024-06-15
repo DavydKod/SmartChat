@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {createChat} from "../../../redux/actions/chatActions";
 
 
-const Contact = ( { contact }) => {
+const Contact = ( { contact, setSearchResults, setSearchPerformed }) => {
 
     const dispatch = useDispatch();
     const { user } = useSelector((state)=>state.user)
@@ -17,8 +17,10 @@ const Contact = ( { contact }) => {
         token: user.token,
     };
 
-    const openChat=()=>{
-        dispatch(createChat(values))
+    const openChat = async () => {
+        await dispatch(createChat(values));
+        //setSearchResults([]);
+        setSearchPerformed(false)
     };
 
     return (
