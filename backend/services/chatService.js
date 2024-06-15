@@ -1,8 +1,6 @@
 const createError = require("http-errors");
-
 const chatModel = require('../models/chatModel')
 const userModel = require('../models/userModel')
-
 
 const doesConversationExist = async (
     sender_id,
@@ -26,7 +24,7 @@ const doesConversationExist = async (
         //populate message model
         convos = await userModel.populate(convos, {
             path: "lastMessage.senderId",
-            select: "name email avatar",
+            select: "name tag email avatar",
         });
 
         return convos[0];
@@ -41,7 +39,7 @@ const doesConversationExist = async (
         //populate message model
         convo = await userModel.populate(convo, {
             path: "lastMessage.senderId",
-            select: "name email avatar",
+            select: "name tag email avatar",
         });
 
         return convo;
@@ -68,6 +66,7 @@ const populateConversation = async (
         throw createError("Oops...Something went wrong !");
     return populatedConvo;
 };
+
 const getUserConversations = async (user_id) => {
     let conversations;
     await chatModel.find({
@@ -80,7 +79,7 @@ const getUserConversations = async (user_id) => {
         .then(async (results) => {
             results = await userModel.populate(results, {
                 path: "lastMessage.senderId",
-                select: "name email avatar",
+                select: "name tag email avatar",
             });
             conversations = results;
         })
@@ -90,7 +89,7 @@ const getUserConversations = async (user_id) => {
     return conversations;
 };
 
-const updateLatestMessage = async (convo_id, msg) => {
+const updateLastMessage = async (convo_id, msg) => {
     const updatedConvo = await chatModel.findByIdAndUpdate(convo_id, {
         lastMessage: msg,
     });
@@ -101,4 +100,4 @@ const updateLatestMessage = async (convo_id, msg) => {
     return updatedConvo;
 };
 
-module.exports = { doesConversationExist, createConversation, populateConversation, getUserConversations, updateLatestMessage}
+module.exports = { doesConversationExist, createConversation, populateConversation, getUserConversations, updateLastMessage}

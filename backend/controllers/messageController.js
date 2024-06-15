@@ -1,6 +1,4 @@
-const MessageModel = require('../models/messageModel')
-const mongoose = require('mongoose');
-const { updateLatestMessage } = require("../services/chatService")
+const { updateLastMessage } = require("../services/chatService")
 const { createMessage, populateMessage, getChatMessages } = require('../services/mesageService');
 
 const sendMessage = async (req, res, next) => {
@@ -18,7 +16,7 @@ const sendMessage = async (req, res, next) => {
         };
         let newMessage = await createMessage(msgData);
         let populatedMessage = await populateMessage(newMessage._id);
-        await updateLatestMessage(chatID, newMessage);
+        await updateLastMessage(chatID, newMessage);
         res.json(populatedMessage);
     } catch (error) {
         next(error);

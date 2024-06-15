@@ -1,37 +1,35 @@
 const mongoose = require("mongoose");
 
 const chatSchema = new mongoose.Schema(
-  {
-    name: {
-        type: String,
-        required: true
-    },
-    isGroup: {
-        type: Boolean,
-        default: false
-    },
-    members: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+    {
+        name: {
+            type: String,
+            required: true
         },
-    ],
-    admins: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+        isGroup: {
+            type: Boolean,
+            default: false
         },
-    ],
-    /*owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', required: true
-    },*/
-    lastMessage: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message',
+        members: [
+            {
+                user: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User',
+                    required: true
+                },
+                role: {
+                    type: String,
+                    enum: ['user', 'admin', 'owner'],
+                    default: 'user'
+                }
+            }
+        ],
+        lastMessage: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Message',
+        },
     },
-  },
-  { timestamps: true, collection: "chats" }
+    { timestamps: true, collection: "chats" }
 );
 
 const Chat = mongoose.model("Chat", chatSchema);

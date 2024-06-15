@@ -8,7 +8,9 @@ const initialState = {
     status: "idle",
     error: null,
     chats: [],
-    currentChat: {},
+    currentChat: {
+        admins: []
+    },
     messages: [],
 };
 
@@ -18,6 +20,10 @@ export const chatSlice = createSlice({
     reducers: {
         setCurrentChat:(state, action) => {
             state.currentChat = action.payload;
+
+            // Extract admins from members
+            const admins = action.payload.members.filter(member => member.role === 'admin');
+            state.currentChat.admins = admins.map(admin => admin.user);
         },
     },
     extraReducers(builder) {
@@ -41,6 +47,11 @@ export const chatSlice = createSlice({
             .addCase(createChat.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.currentChat = action.payload;
+
+                // Extract admins from members
+                const admins = action.payload.members.filter(member => member.role === 'admin');
+                state.currentChat.admins = admins.map(admin => admin.user);
+
                 state.error = null;
             })
             .addCase(createChat.rejected, (state, action) => {
@@ -67,6 +78,14 @@ export const chatSlice = createSlice({
             .addCase(sendMessage.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.messages = [...state.messages, action.payload];
+                let currentChat = {...action.payload.chatID,
+                    lastMessage: action.payload,
+                };
+                let newChats = [...state.chats].filter(
+                    (chat) => chat._id !== currentChat._id
+                );
+                newChats.unshift(currentChat);
+                state.chats = newChats;
                 state.error = null;
             })
             .addCase(sendMessage.rejected, (state, action) => {

@@ -7,7 +7,8 @@ import SearchResults from "./search/SearchResults";
 
 const SidePanel = () => {
     const [searchResults, setSearchResults] = useState([]);
-    console.log(searchResults)
+    const [searchPerformed, setSearchPerformed] = useState(false);
+    console.log(searchResults);
 
     return (
         <div className="sidePanel">
@@ -15,20 +16,23 @@ const SidePanel = () => {
             <SearchBar
                 searchLength={searchResults.length}
                 setSearchResults={setSearchResults}
+                setSearchPerformed={setSearchPerformed}
             />
-            {searchResults.length > 0 ? (
+
+            {searchPerformed ? (
                 <>
-                    <SearchResults searchResults={searchResults}/>
+                    <SearchResults
+                        searchResults={searchResults}
+                        setSearchResults={setSearchResults}
+                        setSearchPerformed={setSearchPerformed}
+                    />
                 </>
             ) : (
                 <>
                     <Chats />
-                    {/*<ChatList />*/}
                 </>
             )}
-
         </div>
-
     );
 }
 

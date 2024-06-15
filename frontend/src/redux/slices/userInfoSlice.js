@@ -7,6 +7,7 @@ const initialState = {
     user:{
         id: '',
         name: '',
+        tag: '',
         email: '',
         avatar: '',
         token: '',
@@ -23,6 +24,7 @@ export const userInfoSlice = createSlice({
             state.user = {
                 id: '',
                 name: '',
+                tag: '',
                 email: '',
                 avatar: '',
                 token: '',

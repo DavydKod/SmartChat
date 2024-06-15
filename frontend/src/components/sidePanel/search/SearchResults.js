@@ -1,7 +1,7 @@
 import Contact from "./Contact";
 
 
-const SearchResults = ({ searchResults }) => {
+const SearchResults = ({ searchResults, setSearchResults, setSearchPerformed }) => {
 
 
     return (
@@ -13,7 +13,12 @@ const SearchResults = ({ searchResults }) => {
             <ul>
                 {
                     searchResults && searchResults.map((user)=>
-                    <Contact contact={user} key={user._id}/>
+                    <Contact
+                        contact={user}
+                        key={user._id}
+                        setSearchResults={setSearchResults}
+                        setSearchPerformed={setSearchPerformed}
+                    />
                     )
                 }
             </ul>

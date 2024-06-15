@@ -1,38 +1,37 @@
 const createError = require("http-errors");
-const User_schema = require("../models/userModel");
-const {compare} = require("bcrypt");
+const userModel = require("../models/userModel");
+const bcrypt = require("bcrypt");
 
 module.exports.CreateUserFunction = async (userData) => {
-    const { name, email, avatar, password } = userData;
+    const { name, tag, email, avatar, password } = userData;
 
     // check is fields are empty
-    if(!name || !email || !password) {
-        throw createError(400, 'Please fill all fields');
-    }
-    // validate email, password and the rest
-
-    const checkDb = await User_schema.findOne({ email });
-    if(checkDb){
-        throw createError(400, 'Email already exists. Try another one.');
+    if (!name || !tag || !email || !password) {
+        throw createError(400, 'All fields must be filled!');
     }
 
-    return await new User_schema({
-        name, email, avatar, password
+    // validate data
+    const account = await userModel.findOne({ email });
+    if (account) {
+        throw new Error('Account already exists. Try a different email or login.');
+    }
+
+    return await new userModel({
+        name, tag, email, avatar, password
     }).save();
 
 };
 
 module.exports.LoginUserFunction = async (email, password) => {
-    const user = await User_schema.findOne({ email: email.toLowerCase() }).lean();
+    const user = await userModel.findOne({ email: email.toLowerCase() }).lean();
 
     if (!user) {
-        throw createError(500, "User Not Found!");
+        throw new Error('User not found');
     }
 
-    let passwordMatches = await compare(password, user.password);
-
-    if (!passwordMatches) {
-        throw createError("Wrong password!");
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        throw new Error('Incorrect password');
     }
 
     return user;
