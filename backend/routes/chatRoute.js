@@ -5,7 +5,7 @@ const { createChat, userChats} = require("../controllers/chatController");
 const { AuthMiddleware } = require("../middlewares/auth.middleware");
 
 
-router.route('/openChat/:userId').post(createChat)
+router.route('/openChat/:userId').post(AuthMiddleware, createChat)
 router.route('/userChats/:userId').get(AuthMiddleware, userChats)
 //router.route('/find/:senderId/:receiverId').get(findChat)
 
