@@ -1,26 +1,33 @@
 import Select from "react-select";
+import userAvatar from "../../../../images/avatar.png"
 
+const aaa = [
+    { value: "chocolate", label: "Chocolate"},
+    { value: "strawberry", label: "Strawberry"},
+    { value: "vanilla", label: "Vanilla"}
+];
 
-const AddUsers = ({selectedUsers,
-                      setSelectedUsers,
+const AddUsers = ({
                       searchResults,
-                      handleSearch,}) => {
+                      setSelectedUsers,
+                      handleSearch }) => {
+
     return (
         <div className="mt-4">
             <Select
                 options={searchResults}
                 onChange={setSelectedUsers}
                 onKeyDown={(e) => handleSearch(e)}
-                placeholder="Search, select users"
+                placeholder="Add members"
                 isMulti
                 formatOptionLabel={(user) => (
                     <div className="flex items-center gap-1">
                         <img
-                            src={user.picture}
+                            src={userAvatar}
                             alt=""
                             className="w-8 h-8 object-cover rounded-full"
                         />
-                        <span className="text-[#222]">{user.label}</span>
+                        <span className="text-black">{user.label}</span>
                     </div>
                 )}
                 styles={{
