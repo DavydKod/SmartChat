@@ -314,6 +314,16 @@
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-
+.createGroupAnimation {
+    animation: cga 0.5s;
+}
+@keyframes cga {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
 
 

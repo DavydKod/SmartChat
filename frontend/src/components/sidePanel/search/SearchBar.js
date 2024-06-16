@@ -1,13 +1,10 @@
 import axios from "axios";
 import clearIcon from "../../../images/clear.png"
 import { useSelector } from "react-redux";
-import {useRef, useState} from "react";
 
-const SearchBar = ({ searchLength, setSearchResults }) => {
+const SearchBar = ({ setSearchResults, inputRef, inputValue, setInputValue }) => {
     const { user } = useSelector((state) => state.user);
     const { token } = user;
-    const inputRef = useRef(null); // Create a ref for the input element
-    const [inputValue, setInputValue] = useState('');
 
     const handleSearch = async (e) => {
         console.log(e.target.value);

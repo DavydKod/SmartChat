@@ -1,35 +1,48 @@
-import UserInfo from "./UserInfo";
+import UserInfo from "./header/UserInfo";
 import SearchBar from "./search/SearchBar";
 import Chats from "./chats/Chats";
-import {useState} from "react";
+import React, {useRef, useState} from "react";
 import SearchResults from "./search/SearchResults";
+import CreateGroup from "./header/newGroupChat/newGroupChat";
 
 const SidePanel = () => {
     const [searchResults, setSearchResults] = useState([]);
+    const [showNewGroup, setShowNewGroup] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+    const inputRef = useRef(null); // Create a ref for the input element
+
     console.log(searchResults);
 
     return (
         <div className="sidePanel">
-            <UserInfo />
-            <SearchBar
-                searchLength={searchResults.length}
-                setSearchResults={setSearchResults}
-            />
+            <UserInfo setShowNewGroup={setShowNewGroup}/>
 
-            {searchResults.length > 0 ? (
-                <>
-                    <SearchResults
-                        searchResults={searchResults}
-                        setSearchResults={setSearchResults}
-                    />
-                </>
+            {showNewGroup ? (
+                <CreateGroup setShowNewGroup={setShowNewGroup} />
             ) : (
                 <>
-                    <Chats />
+                    <SearchBar
+                        setSearchResults={setSearchResults}
+                        inputRef={inputRef}
+                        inputValue={inputValue}
+                        setInputValue={setInputValue}
+                    />
+
+                    {searchResults.length > 0 ? (
+                        <SearchResults
+                            searchResults={searchResults}
+                            setSearchResults={setSearchResults}
+                            inputRef={inputRef}
+                            setInputValue={setInputValue}
+                        />
+                    ) : (
+                        <Chats />
+                    )}
                 </>
             )}
         </div>
     );
+
 }
 
 export default SidePanel;

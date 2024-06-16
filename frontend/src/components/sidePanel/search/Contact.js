@@ -3,21 +3,22 @@ import {useDispatch, useSelector} from "react-redux";
 import {createChat} from "../../../redux/actions/chatActions";
 
 
-const Contact = ( { contact, setSearchResults }) => {
+const Contact = ( { contact, setSearchResults, inputRef, setInputValue }) => {
 
     const dispatch = useDispatch();
     const { user } = useSelector((state)=>state.user)
 
     const values = {
         userId: user._id,
-        receiverId: contact._id,
+        memberIds: [contact._id],
         token: user.token,
     };
 
     const openChat = async () => {
-        console.log("id:",contact._id);
         await dispatch(createChat(values));
         setSearchResults([]);
+        inputRef.current.value = '';
+        setInputValue('');
     };
 
     return (

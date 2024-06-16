@@ -4,11 +4,30 @@ const { createChatService } = require("../services/chatService")
 
 const createChat = async (req, res) => {
     const userId = req.params.userId;
-    const { receiverId } = req.body;
+    const { memberIds, isGroup, chatName } = req.body;
 
     try {
-        const chat = await createChatService(userId, receiverId);
-        return res.status(200).json(chat);
+
+        let chat;
+        if (isGroup) {
+            // create group chat
+            chat = await createGroupChat(userId, memberIds, chatName);
+
+        } else if (!isGroup && memberIds.length === 1) {
+            // create private chat
+            const receiverId = memberIds[0];
+            chat = await createChatService(userId, receiverId);
+
+        } else {
+            return res.status(400).json({ message: "Failed to create chat. Invalid input" });
+        }
+
+        if (chat) {
+            return res.status(200).json(chat);
+        } else {
+            return res.status(500).json({ message: "Failed to create chat." });
+        }
+
     } catch (error) {
         console.error("Error creating or finding chat:", error);
         return res.status(500).json({ message: error.message });
