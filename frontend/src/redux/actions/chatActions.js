@@ -23,11 +23,15 @@ export const getChats = createAsyncThunk(
 export const createChat = createAsyncThunk(
     'chats/create',
     async (values, thunkAPI) => {
-        const {token, userId, receiverId} = values
+        const {token, userId, memberIds, isGroup, chatName} = values
         try {
             const response = await axios.post(
                 `http://localhost:4000/api/chat//openChat/${userId}`,
-                {receiverId},
+                {
+                    memberIds,
+                    isGroup,
+                    chatName
+                },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

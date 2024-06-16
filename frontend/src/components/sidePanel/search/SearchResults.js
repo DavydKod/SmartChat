@@ -1,6 +1,6 @@
 import Contact from "./Contact";
 
-const SearchResults = ({ searchResults, setSearchResults }) => {
+const SearchResults = ({ searchResults, setSearchResults, inputRef, setInputValue }) => {
 
     return (
         <div className="chatList">
@@ -11,6 +11,8 @@ const SearchResults = ({ searchResults, setSearchResults }) => {
                         contact={user}
                         key={user._id}
                         setSearchResults={setSearchResults}
+                        inputRef={inputRef}
+                        setInputValue={setInputValue}
                     />
                     )
                 }

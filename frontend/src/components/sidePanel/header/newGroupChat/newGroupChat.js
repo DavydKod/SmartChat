@@ -1,17 +1,10 @@
-//import { useState } from "react";
-//import { ReturnIcon, ValidIcon } from "../../../../svg";
-//import UnderlineInput from "./UnderlineInput";
-//import MultipleSelect from "./MultipleSelect";
 import doneIcon from "../../../../images/done.png"
-import { useDispatch, useSelector } from "react-redux";
-//import ClipLoader from "react-spinners/ClipLoader";
-//import { createGroupConversation } from "../../../../features/chatSlice";
+import { useSelector } from "react-redux";
 import backIcon from "../../../../images/close.png"
 import GroupName from "./GroupName";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import AddUsers from "./AddUsers";
 import axios from "axios";
-import sendButton from "../../../../images/send-button.png";
 
 
 export default function CreateGroup({ setShowNewGroup }) {
@@ -22,10 +15,8 @@ export default function CreateGroup({ setShowNewGroup }) {
     const [selectedUsers, setSelectedUsers] = useState([]);
 
     const handleSearch = async (e) => {
-        console.log(e.target.value);
         setSearchResults([]);
         if (e.target.value && e.key === "Enter") {
-            console.log("just clicked");
 
             try {
                 const { data } = await axios.get(
@@ -41,7 +32,7 @@ export default function CreateGroup({ setShowNewGroup }) {
                     data.forEach(user => {
                         let temp = {
                             value: user._id,
-                            label: user.name + " " + "@"+user.tag,
+                            label: user.name + " @"+user.tag,
                             avatar: ""
                         };
                         tempArray.push(temp);
@@ -58,9 +49,6 @@ export default function CreateGroup({ setShowNewGroup }) {
             setSearchResults([]);
         }
     };
-    console.log("selec", selectedUsers);
-
-
 
 
     return (

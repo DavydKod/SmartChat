@@ -8,15 +8,13 @@ const Chat = ({chat}) => {
     const dispatch = useDispatch();
     const { user } = useSelector((state)=>state.user)
     const users = chat.members;
-    const friend = users[1].user;
-    console.log("friend", friend)
-    const receiverId = friend._id;
-    console.log("receiverId", receiverId)
 
+    // for private chats
+    const friend = users[0].user._id === user._id ? users[1].user : users[0].user;
 
     const values = {
         userId: user._id,
-        receiverId: receiverId,
+        memberIds: [friend._id],
         token: user.token,
     };
 

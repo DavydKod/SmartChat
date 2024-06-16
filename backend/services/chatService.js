@@ -48,18 +48,11 @@ const userModel = require('../models/userModel')
 };*/
 
 const createChatService = async (userId, receiverId) => {
-    /*if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(receiverId)) {
-        throw new Error("Invalid userId or receiverId");
-    }*/
+
     try {
-
-        // Convert userId and receiverId to ObjectId
-        const userObjectId = userId;
-        const receiverObjectId = receiverId;
-
         // Check if a chat already exists
         let chat = await chatModel.findOne({
-            'members.user': { $all: [userObjectId, receiverObjectId] },
+            'members.user': { $all: [userId, receiverId] },
             isGroup: false
         });
 
@@ -83,8 +76,8 @@ const createChatService = async (userId, receiverId) => {
             name: "chat Name",
             isGroup: false,
             members: [
-                { user: userObjectId, role: 'owner' },
-                { user: receiverObjectId, role: 'user' }
+                { user: userId, role: 'owner' },
+                { user: receiverId, role: 'user' }
             ],
         });
 
@@ -99,6 +92,56 @@ const createChatService = async (userId, receiverId) => {
         throw new Error("Cannot open or creat a new chat");
     }
 };
+
+const createGroupChatService = async (userId, memberIds, chatName) => {
+    try {
+        // Check if a group chat already exists with the exact same members
+        let chat = await chatModel.findOne({
+            'members.user': { $all: [userId, ...memberIds] },
+            isGroup: true
+        });
+
+        if (chat) {
+            // Populate members' and lastMessage information if chat exists
+            chat = await chatModel.findById(chat._id)
+                .populate('members.user', '-password')
+                .populate({
+                    path: 'lastMessage',
+                    populate: {
+                        path: 'senderID',
+                        select: 'name tag email avatar'
+                    }
+                });
+
+            return chat;
+        }
+
+        // Create a new group chat if it doesn't exist
+        const members = [
+            { user: userId, role: 'owner' },
+            ...memberIds.map(id => ({ user: id, role: 'user' }))
+        ];
+
+        const newChat = new chatModel({
+            name: chatName,
+            isGroup: true,
+            members: members
+        });
+
+        const savedChat = await newChat.save();
+
+        // Populate members' information for the new group chat
+        return await chatModel.findById(savedChat._id)
+            .populate('members.user', '-password');
+
+    } catch (error) {
+        console.error("Error in createGroupChatService:", error);
+        throw new Error("Cannot create a new group chat");
+    }
+};
+
+
+
 
 
 /*const createConversation = async (data) => {

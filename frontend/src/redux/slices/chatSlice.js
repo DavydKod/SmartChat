@@ -1,5 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {createChat, getChatMessages, getChats, sendMessage} from "../actions/chatActions";
+import { signOut } from './userInfoSlice';
 
 
 const initialState = {
@@ -49,7 +50,6 @@ export const chatSlice = createSlice({
                 // Extract admins from members
                 const admins = action.payload.members.filter(member => member.role === 'admin');
                 state.currentChat.admins = admins.map(admin => admin.user);
-
                 state.error = null;
             })
             .addCase(createChat.rejected, (state, action) => {
@@ -89,6 +89,15 @@ export const chatSlice = createSlice({
             .addCase(sendMessage.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
+            })
+
+            // Reset chat state on signOut
+            .addCase(signOut, (state) => {
+                state.status = "idle";
+                state.error = null;
+                state.chats = [];
+                state.currentChat = { admins: [] };
+                state.messages = [];
             });
     }
 });
