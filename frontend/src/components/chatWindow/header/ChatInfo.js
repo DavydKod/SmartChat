@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {useSelector} from "react-redux";
+import AddUsers from "../../sidePanel/header/newGroupChat/AddUsers";
+import AddUsersToChat from "./AddUsersToChat";
 
 
 const ChatInfo = ({}) => {
     const { currentChat } = useSelector((state) => state.chats);
+    const { user } = useSelector((state) => state.user);
     const oldAdmins = currentChat.admins;
     const adminIds = oldAdmins.map(admin => admin._id);
+
     const [admins] = useState(adminIds);
     const [changes, setChanges] = useState({});
+
+    // user role
+    const userRole = currentChat.members.find(member => member.user._id === user._id).role;
+    //console.log("curr",userRole)
+    //const currentUserRole = currentMember ? currentMember.role : 'user';
 
 
     console.log("admins", currentChat.admins)
@@ -46,6 +55,10 @@ const ChatInfo = ({}) => {
         });*/
     };
 
+    const handleDeleteUser = () => {
+
+        };
+
 
     console.log("adm",adminIds);
 
@@ -58,20 +71,35 @@ const ChatInfo = ({}) => {
                 <div className="users-list">
                     <div className="user-row header">
                         <span>User</span>
-                        <span>Admin</span>
+                        {userRole==="owner" && <span>Admin</span>}
+                        {(userRole==="owner" || userRole==="admin") && <span>Delete</span>}
                     </div>
                     {users.map(user => (
                         <div key={user._id} className="user-row">
                             <span>{user.name}</span>
-                            <input
-                                type="checkbox"
-                                checked={changes[user._id] ?? adminIds.includes(user._id)}
-                                onChange={(e) => handleRoleChange(user._id, e.target.checked)}
-                            />
+                            {userRole==="owner" && (
+                                <input
+                                    type="checkbox"
+                                    checked={changes[user._id] ?? admins.includes(user._id)}
+                                    onChange={(e) => handleRoleChange(user._id, e.target.checked)}
+                                />
+                            )}
+                            {(userRole==="owner" || userRole==="admin") && (
+                                <button onClick={() => handleDeleteUser(user._id)}>Delete</button>
+                            )}
                         </div>
                     ))}
                 </div>
-                <button className="submit-button" onClick={handleSubmit}>Submit Changes</button>
+                {(userRole==="owner" || userRole==="admin") && (
+                    <>
+                        <button className="submit-button" onClick={handleSubmit}>Submit Changes</button>
+                        <AddUsersToChat
+
+
+                        />
+                    </>
+
+                )}
             </div>
         </div>
     );
