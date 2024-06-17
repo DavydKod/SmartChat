@@ -47,7 +47,7 @@ const userModel = require('../models/userModel')
     }
 };*/
 
-const createChatService = async (userId, receiverId) => {
+const createPrivateChat = async (userId, receiverId) => {
 
     try {
         // Check if a chat already exists
@@ -93,7 +93,7 @@ const createChatService = async (userId, receiverId) => {
     }
 };
 
-const createGroupChatService = async (userId, memberIds, chatName) => {
+const createGroupChat = async (userId, memberIds, chatName) => {
     try {
         // Check if a group chat already exists with the exact same members
         let chat = await chatModel.findOne({
@@ -198,4 +198,4 @@ const updateLastMessage = async (convo_id, msg) => {
     return updatedConvo;
 };
 
-module.exports = { createChatService, updateLastMessage}
+module.exports = { createPrivateChat, createGroupChat, updateLastMessage}

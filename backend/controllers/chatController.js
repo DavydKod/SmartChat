@@ -1,6 +1,6 @@
 const chatModel = require("../models/chatModel");
 const mongoose = require("mongoose");
-const { createChatService } = require("../services/chatService")
+const { createPrivateChat, createGroupChat } = require("../services/chatService")
 
 const createChat = async (req, res) => {
     const userId = req.params.userId;
@@ -16,7 +16,7 @@ const createChat = async (req, res) => {
         } else if (!isGroup && memberIds.length === 1) {
             // create private chat
             const receiverId = memberIds[0];
-            chat = await createChatService(userId, receiverId);
+            chat = await createPrivateChat(userId, receiverId);
 
         } else {
             return res.status(400).json({ message: "Failed to create chat. Invalid input" });
