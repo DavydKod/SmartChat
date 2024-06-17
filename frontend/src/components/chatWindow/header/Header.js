@@ -10,9 +10,10 @@ const Header = () => {
     //const navigate = useNavigate();
     const [showMenu, setShowMenu] = useState(false);
     const {currentChat} = useSelector((state) => state.chats);
+    const {user} = useSelector((state) => state.user);
     const {name} = currentChat;
     const users = currentChat.members;
-    const friend = users[1].user;
+    const friend = users[0].user._id === user._id ? users[1].user : users[0].user;
 
     if (Object.keys(currentChat).length === 0) {
         return null;

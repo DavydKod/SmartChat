@@ -1,9 +1,10 @@
 import friendAvatar from "../../../images/avatar.png";
 import {useDispatch, useSelector} from "react-redux";
 import {createChat} from "../../../redux/actions/chatActions";
+import SocketContext from "../../../context/Context";
 
 
-const Contact = ( { contact, setSearchResults, inputRef, setInputValue }) => {
+function Contact ( { socket, contact, setSearchResults, inputRef, setInputValue }) {
 
     const dispatch = useDispatch();
     const { user } = useSelector((state)=>state.user)
@@ -15,7 +16,9 @@ const Contact = ( { contact, setSearchResults, inputRef, setInputValue }) => {
     };
 
     const openChat = async () => {
-        await dispatch(createChat(values));
+        let foundChat = await dispatch(createChat(values));
+        console.log("fc",foundChat.payload._id);
+        socket.emit("open chat", foundChat.payload._id)
         setSearchResults([]);
         inputRef.current.value = '';
         setInputValue('');
@@ -37,4 +40,10 @@ const Contact = ( { contact, setSearchResults, inputRef, setInputValue }) => {
 
 }
 
-export default Contact;
+const ContactSocket = (props) => (
+    <SocketContext.Consumer>
+        {(socket) => <Contact {...props} socket={socket} />}
+    </SocketContext.Consumer>
+);
+
+export default ContactSocket;
