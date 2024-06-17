@@ -24,6 +24,24 @@ export const chatSlice = createSlice({
             const admins = action.payload.members.filter(member => member.role === 'admin');
             state.currentChat.admins = admins.map(admin => admin.user);
         },
+        updateMessages: (state, action) => {
+            // msg
+            let chat = state.currentChat;
+            console.log("chatid", chat._id);
+            if (chat._id === action.payload.chatID._id) {
+                state.messages = [...state.messages, action.payload];
+            }
+
+            // chats
+            let currentChat = {...action.payload.chatID,
+                lastMessage: action.payload,
+            };
+            let newChats = [...state.chats].filter(
+                (chat) => chat._id !== currentChat._id
+            );
+            newChats.unshift(currentChat);
+            state.chats = newChats;
+        },
     },
     extraReducers(builder) {
         builder
@@ -102,6 +120,6 @@ export const chatSlice = createSlice({
     }
 });
 
-export const {setCurrentChat} = chatSlice.actions;
+export const {setCurrentChat, updateMessages} = chatSlice.actions;
 
 export default chatSlice.reducer;

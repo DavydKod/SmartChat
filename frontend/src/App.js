@@ -3,6 +3,11 @@ import Home from './pages/Home';
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import {useSelector} from "react-redux";
+import SocketContext from "./context/Context";
+
+const { io } = require("socket.io-client");
+
+const socket = io("http://localhost:4000");
 
 function App() {
     const { user } = useSelector((state) => state.user);
@@ -10,15 +15,18 @@ function App() {
     console.log(user)
   return (
       <div>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Login />}></Route>
-            <Route path="/signup" element={<Signup />}></Route>
-            <Route path="/chat" element={
-                token ? <Home /> : <Navigate to="/" />
-            }></Route>
-          </Routes>
-        </Router>
+        <SocketContext.Provider value={socket}>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Login />}></Route>
+                    <Route path="/signup" element={<Signup />}></Route>
+                    <Route path="/chat" element={
+                        token ? <Home socket={socket} /> : <Navigate to="/" />
+                    }></Route>
+                </Routes>
+            </Router>
+        </SocketContext.Provider>
+
       </div>
   );
 }
