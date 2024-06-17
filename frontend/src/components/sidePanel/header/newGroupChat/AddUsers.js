@@ -1,11 +1,6 @@
 import Select from "react-select";
 import userAvatar from "../../../../images/avatar.png"
 
-const aaa = [
-    { value: "chocolate", label: "Chocolate"},
-    { value: "strawberry", label: "Strawberry"},
-    { value: "vanilla", label: "Vanilla"}
-];
 
 const AddUsers = ({
                       searchResults,

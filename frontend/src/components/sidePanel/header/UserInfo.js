@@ -10,7 +10,6 @@ const UserInfo = ( { setShowNewGroup }) => {
     const {user} = useSelector((state) => state.user);
 
     const [showMenu, setShowMenu] = useState(false);
-    //const [showNewGroup, setShowNewGroup] = useState(false);
 
     return (
         <>

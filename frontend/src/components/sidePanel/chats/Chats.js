@@ -9,7 +9,7 @@ const Chats = () => {
         <div className="chatList">
             <ul>
                 {chats && chats
-                    .filter((c) => c.lastMessage || c._id === currentChat._id)
+                    .filter((c) => c.lastMessage || c._id === currentChat._id || c.isGroup)
                     .map((convo) => (
                     <Chat chat={convo} key={convo._id} />
                 ))}

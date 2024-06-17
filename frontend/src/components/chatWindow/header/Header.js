@@ -2,11 +2,13 @@ import friendAvatar from "../../../images/avatar.png";
 import info from "../../../images/information.png";
 import close from "../../../images/close.png"
 import {useSelector} from "react-redux";
-//import {useNavigate} from "react-router-dom";
+import React, {useState} from "react";
+import MenuChat from "./MenuChat";
 
 
 const Header = () => {
     //const navigate = useNavigate();
+    const [showMenu, setShowMenu] = useState(false);
     const {currentChat} = useSelector((state) => state.chats);
     const {name} = currentChat;
     const users = currentChat.members;
@@ -22,6 +24,7 @@ const Header = () => {
 
     return (
         <div className="top">
+
             <div className="user">
                 <img src={friendAvatar} alt="" className=""/>
                 <div className="texts">
@@ -29,13 +32,18 @@ const Header = () => {
                     <p>Online</p>
                 </div>
             </div>
-            <div className="icons">
-                <img src={info} alt=""/>
+
+            <div className="icons relative" onClick={() => setShowMenu((prev) => !prev)}>
+                <button>
+                    <img src={info} alt=""/>
+                </button>
+                {showMenu ? <MenuChat /> : null}
 
                 <button onClick={handleClose}>
                     <img src={close} alt="" />
                 </button>
             </div>
+
         </div>
 
     );
