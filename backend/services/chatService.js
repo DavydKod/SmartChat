@@ -198,4 +198,14 @@ const updateLastMessage = async (convo_id, msg) => {
     return updatedConvo;
 };
 
-module.exports = { createPrivateChat, createGroupChat, updateLastMessage}
+// Service to update a user's role
+const updateUserRole = async (chatId, userId, role) => {
+    await chatModel.updateOne(
+        { _id: chatId, 'members.user': userId },
+        { $set: { 'members.$.role': role } }
+    );
+};
+
+
+module.exports = { createPrivateChat, createGroupChat, updateLastMessage,
+    updateUserRole}

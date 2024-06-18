@@ -1,6 +1,6 @@
 const chatModel = require("../models/chatModel");
 const mongoose = require("mongoose");
-const { createPrivateChat, createGroupChat } = require("../services/chatService")
+const { createPrivateChat, createGroupChat, updateUserRole } = require("../services/chatService")
 
 const createChat = async (req, res) => {
     const userId = req.params.userId;
@@ -58,5 +58,19 @@ const userChats = async (req, res) => {
     }
 };
 
+const changeUserRole = async (req, res) => {
+    const { chatId, userId, role } = req.body;
 
-module.exports = { createChat, userChats };
+    try {
+        await updateUserRole(chatId, userId, role);
+        res.status(200).json({ message: 'User role updated successfully' });
+    } catch (error) {
+        console.error('Error updating user role:', error);
+        res.status(500).json({ message: 'Error updating user role' });
+    }
+};
+
+
+
+
+module.exports = { createChat, userChats, changeUserRole };
