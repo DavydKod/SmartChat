@@ -13,7 +13,11 @@ const Header = () => {
     const {user} = useSelector((state) => state.user);
     const {name} = currentChat;
     const users = currentChat.members;
-    const friend = users[0].user._id === user._id ? users[1].user : users[0].user;
+    // for private chats
+    let friend;
+    if (!currentChat.isGroup) {
+        friend = users[0].user._id === user._id ? users[1].user : users[0].user;
+    }
 
     if (Object.keys(currentChat).length === 0) {
         return null;

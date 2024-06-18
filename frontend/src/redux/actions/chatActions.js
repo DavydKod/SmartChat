@@ -26,7 +26,7 @@ export const createChat = createAsyncThunk(
         const {token, userId, memberIds, chatName, isGroup} = values
         try {
             const response = await axios.post(
-                `http://localhost:4000/api/chat/openChat/${userId}`,
+                `http://localhost:4000/api/chat/createChat/${userId}`,
                 {
                     memberIds,
                     isGroup,
@@ -37,6 +37,28 @@ export const createChat = createAsyncThunk(
                         Authorization: `Bearer ${token}`,
                 },
             });
+            return response.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const openChat = createAsyncThunk(
+    'chats/open',
+    async (values, thunkAPI) => {
+        const {token, chatId} = values
+        try {
+            const response = await axios.post(
+                `http://localhost:4000/api/chat/openChat`,
+                {
+                    chatId
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
             return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);

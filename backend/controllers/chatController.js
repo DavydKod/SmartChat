@@ -1,6 +1,7 @@
 const chatModel = require("../models/chatModel");
 const mongoose = require("mongoose");
-const { createPrivateChat, createGroupChat, updateUserRole } = require("../services/chatService")
+const { createPrivateChat, createGroupChat, openExistingChat, updateUserRole,
+    removeUserFromChat, deleteChatService } = require("../services/chatService")
 
 const createChat = async (req, res) => {
     const userId = req.params.userId;
@@ -30,6 +31,22 @@ const createChat = async (req, res) => {
 
     } catch (error) {
         console.error("Error creating or finding chat:", error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+const openChat = async (req, res) => {
+    const { chatId } = req.body;
+
+    try {
+        const chat = await openExistingChat(chatId);
+        if (chat) {
+            return res.status(200).json(chat);
+        } else {
+            return res.status(404).json({ message: "Chat not found" });
+        }
+    } catch (error) {
+        console.error("Error opening chat:", error);
         return res.status(500).json({ message: error.message });
     }
 };
@@ -70,7 +87,31 @@ const changeUserRole = async (req, res) => {
     }
 };
 
+const deleteUserFromChat = async (req, res) => {
+    const { chatId, userId } = req.body;
+
+    try {
+        await removeUserFromChat(chatId, userId);
+        res.status(200).json({ message: 'User removed from chat successfully' });
+    } catch (error) {
+        console.error('Error removing user from chat:', error);
+        res.status(500).json({ message: 'Error removing user from chat' });
+    }
+};
+
+const deleteChat = async (req, res) => {
+    const { chatId } = req.params;
+
+    try {
+        await deleteChatService(chatId);
+        res.status(200).json({ message: 'Chat deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting chat:', error);
+        res.status(500).json({ message: 'Error deleting chat' });
+    }
+};
 
 
 
-module.exports = { createChat, userChats, changeUserRole };
+
+module.exports = { createChat, openChat, userChats, changeUserRole, deleteUserFromChat, deleteChat };
