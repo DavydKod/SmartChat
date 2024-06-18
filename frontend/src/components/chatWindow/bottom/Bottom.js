@@ -1,13 +1,13 @@
-import attachments from "../../../images/attachment.png";
 import emojiIcon from "../../../images/emoji.png";
 import EmojiPicker from "emoji-picker-react";
 import sendButton from "../../../images/send-button.png";
 import {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {sendMessage} from "../../../redux/actions/chatActions";
+import SocketContext from "../../../context/Context";
 
 
-const Bottom = () => {
+function Bottom ( {socket}) {
     const dispatch = useDispatch();
     const { currentChat } = useSelector((state)=>state.chats)
     const { user } = useSelector((state)=>state.user)
@@ -37,12 +37,16 @@ const Bottom = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await dispatch(sendMessage({
+        let textMessage = await dispatch(sendMessage({
             message: text,
             chatID: currentChat._id,
             token: user.token,
             content: [],
         } ));
+        console.log("tm",textMessage)
+        const membersIds = currentChat.members.map(member => member.user._id);
+        console.log("mi", membersIds);
+        socket.emit("send message", textMessage.payload, membersIds);
         setText("");
     };
 
@@ -51,10 +55,6 @@ const Bottom = () => {
         <form
             onSubmit={(e) => handleSubmit(e)}
             className="bottom">
-
-            {/*<div className="icons">
-                <img src={attachments} alt="" />
-            </div>*/}
 
             <input
                 type="text"
@@ -87,4 +87,10 @@ const Bottom = () => {
     );
 }
 
-export default Bottom;
+const BottomSocket = (props) => (
+    <SocketContext.Consumer>
+        {(socket) => <Bottom {...props} socket={socket} />}
+    </SocketContext.Consumer>
+);
+
+export default BottomSocket;

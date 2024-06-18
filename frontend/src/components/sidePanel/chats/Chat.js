@@ -2,9 +2,10 @@ import friendAvatar from "../../../images/avatar.png";
 import {useDispatch, useSelector} from "react-redux";
 import {createChat} from "../../../redux/actions/chatActions";
 import dateHandler from "../../../utils/msgDate"
+import SocketContext from "../../../context/Context";
 
 
-const Chat = ({chat}) => {
+function Chat ({chat, socket}) {
     const dispatch = useDispatch();
     const { user } = useSelector((state)=>state.user)
     const users = chat.members;
@@ -22,8 +23,9 @@ const Chat = ({chat}) => {
         isGroup: chat.isGroup
     };
 
-    const openChat=()=>{
-        dispatch(createChat(values))
+    const openChat = async () => {
+        await dispatch(createChat(values));
+        socket.emit("open chat", chat._id)
     };
 
 
@@ -58,4 +60,10 @@ const Chat = ({chat}) => {
     );
 }
 
-export default Chat;
+const ChatSocket = (props) => (
+    <SocketContext.Consumer>
+        {(socket) => <Chat {...props} socket={socket} />}
+    </SocketContext.Consumer>
+);
+
+export default ChatSocket;
