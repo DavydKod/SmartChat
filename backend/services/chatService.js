@@ -3,49 +3,6 @@ const mongoose = require("mongoose");
 const chatModel = require('../models/chatModel')
 const userModel = require('../models/userModel')
 
-/*const doesConversationExist = async (
-    sender_id,
-    receiver_id,
-    isGroup
-) => {
-    if (isGroup === false) {
-        let convos = await chatModel.find({
-            isGroup: false,
-            $and: [
-                { members: { $elemMatch: { $eq: sender_id } } },
-                { members: { $elemMatch: { $eq: receiver_id } } },
-            ],
-        })
-            .populate("members", "-password")
-            .populate("lastMessage");
-
-        if (!convos)
-            throw createError("Oops...Something went wrong !");
-
-        //populate message model
-        convos = await userModel.populate(convos, {
-            path: "lastMessage.senderId",
-            select: "name tag email avatar",
-        });
-
-        return convos[0];
-    } else {
-        //it's a group chat
-        let convo = await chatModel.findById(isGroup)
-            .populate("members admins", "-password")
-            .populate("lastMessage");
-
-        if (!convo)
-            throw createError("Oops...Something went wrong !");
-        //populate message model
-        convo = await userModel.populate(convo, {
-            path: "lastMessage.senderId",
-            select: "name tag email avatar",
-        });
-
-        return convo;
-    }
-};*/
 
 const createPrivateChat = async (userId, receiverId) => {
 
@@ -88,7 +45,6 @@ const createPrivateChat = async (userId, receiverId) => {
             .populate('members.user', '-password');
 
     } catch (error) {
-        console.error("Error in createChatService:", error);
         throw new Error("Cannot open or creat a new chat");
     }
 };
@@ -135,9 +91,22 @@ const createGroupChat = async (userId, memberIds, chatName) => {
             .populate('members.user', '-password');
 
     } catch (error) {
-        console.error("Error in createGroupChatService:", error);
         throw new Error("Cannot create a new group chat");
     }
+};
+
+// Service to find and return a chat by its chatId
+const openExistingChat = async (chatId) => {
+    const chat = await chatModel.findById(chatId)
+        .populate('members.user', '-password')
+        .populate({
+            path: 'lastMessage',
+            populate: {
+                path: 'senderID',
+                select: 'name tag email avatar'
+            }
+        });
+    return chat
 };
 
 
@@ -206,6 +175,17 @@ const updateUserRole = async (chatId, userId, role) => {
     );
 };
 
+const removeUserFromChat = async (chatId, userId) => {
+    await chatModel.updateOne(
+        { _id: chatId },
+        { $pull: { members: { user: userId } } }
+    );
+};
 
-module.exports = { createPrivateChat, createGroupChat, updateLastMessage,
-    updateUserRole}
+const deleteChatService = async (chatId) => {
+    await chatModel.findByIdAndDelete(chatId);
+};
+
+
+module.exports = { createPrivateChat, createGroupChat, openExistingChat, updateLastMessage,
+    updateUserRole, removeUserFromChat, deleteChatService }

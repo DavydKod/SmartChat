@@ -1,6 +1,6 @@
 import friendAvatar from "../../../images/avatar.png";
 import {useDispatch, useSelector} from "react-redux";
-import {createChat} from "../../../redux/actions/chatActions";
+import {openChat} from "../../../redux/actions/chatActions";
 import dateHandler from "../../../utils/msgDate"
 import SocketContext from "../../../context/Context";
 
@@ -12,26 +12,36 @@ function Chat ({chat, socket}) {
 
     const memberIds = users.map(member => member.user._id).filter(id => id !== user._id);
 
-    // for private chats
-    const friend = users[0].user._id === user._id ? users[1].user : users[0].user;
 
-    const values = {
+    // for private chats
+    let friend;
+    if (!chat.isGroup) {
+        friend = users[0].user._id === user._id ? users[1].user : users[0].user;
+    }
+
+
+    /*const values = {
         token: user.token,
         userId: user._id,
         memberIds: memberIds,
         chatName: chat.name,
         isGroup: chat.isGroup
+    };*/
+
+    const values = {
+        token: user.token,
+        chatId: chat._id
     };
 
-    const openChat = async () => {
-        await dispatch(createChat(values));
+    const openExistingChat = async () => {
+        await dispatch(openChat(values));
         socket.emit("open chat", chat._id)
     };
 
 
     return (
         <li
-            onClick={() => openChat()}
+            onClick={() => openExistingChat()}
             className="">
 
             <div className="item flex justify-between items-start p-4 border-b border-gray-300">

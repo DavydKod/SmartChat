@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createChat, getChatMessages, getChats, sendMessage} from "../actions/chatActions";
+import {createChat, getChatMessages, getChats, openChat, sendMessage} from "../actions/chatActions";
 import { signOut } from './userInfoSlice';
 
 
@@ -71,6 +71,23 @@ export const chatSlice = createSlice({
                 state.error = null;
             })
             .addCase(createChat.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+
+            .addCase(openChat.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(openChat.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.currentChat = action.payload;
+
+                // Extract admins from members
+                const admins = action.payload.members.filter(member => member.role === 'admin');
+                state.currentChat.admins = admins.map(admin => admin.user);
+                state.error = null;
+            })
+            .addCase(openChat.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
             })
