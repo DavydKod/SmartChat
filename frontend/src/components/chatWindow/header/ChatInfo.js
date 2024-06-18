@@ -3,6 +3,7 @@ import axios from 'axios';
 import {useSelector} from "react-redux";
 import AddUsers from "../../sidePanel/header/newGroupChat/AddUsers";
 import AddUsersToChat from "./AddUsersToChat";
+import Switch from "react-switch";
 
 
 const ChatInfo = ({}) => {
@@ -11,7 +12,7 @@ const ChatInfo = ({}) => {
     const oldAdmins = currentChat.admins;
     const adminIds = oldAdmins.map(admin => admin._id);
 
-    const [admins] = useState(adminIds);
+    const [admins, setAdmins] = useState(adminIds);
     const [changes, setChanges] = useState({});
 
     // user role
@@ -26,12 +27,43 @@ const ChatInfo = ({}) => {
     console.log("users",users)
     const owner = users[0];
 
-    const handleRoleChange = (userId, isAdmin) => {
+    const handleRoleChange = async (userId) => {
+        console.log("here");
+
+        const newRole = admins.includes(userId) ? 'user' : 'admin';
+        console.log("id: role",userId, newRole);
         setChanges(prevChanges => ({
             ...prevChanges,
-            [userId]: isAdmin
+            [userId]: newRole
         }));
-        console.log("sc", changes);
+
+        // Update local admin list
+        if (admins.includes(userId)) {
+            setAdmins(prevAdmins => prevAdmins.filter(adminId => adminId !== userId));
+        } else {
+            setAdmins(prevAdmins => [...prevAdmins, userId]);
+        }
+        console.log("adm",admins);
+
+        try {
+            await axios.put(
+                `http://localhost:4000/api/chat/updateRole`,
+                {
+                    chatId: currentChat._id,
+                    userId: userId,
+                    role: newRole
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                }
+            );
+
+        } catch (error) {
+            console.log(error);
+        }
+
     };
 
     const handleSubmit = () => {
@@ -60,7 +92,7 @@ const ChatInfo = ({}) => {
         };
 
 
-    console.log("adm",adminIds);
+
 
     return (
         <div className="popup">
@@ -77,11 +109,14 @@ const ChatInfo = ({}) => {
                     {users.map(user => (
                         <div key={user._id} className="user-row">
                             <span>{user.name}</span>
-                            {userRole==="owner" && (
-                                <input
-                                    type="checkbox"
-                                    checked={changes[user._id] ?? admins.includes(user._id)}
-                                    onChange={(e) => handleRoleChange(user._id, e.target.checked)}
+                            {userRole === "owner" && (
+                                <Switch
+                                    onChange={() => handleRoleChange(user._id)}
+                                    checked={changes[user._id] ? changes[user._id] === 'admin' : admins.includes(user._id)}
+                                    offColor="#888"
+                                    onColor="#0d6efd"
+                                    uncheckedIcon={false}
+                                    checkedIcon={false}
                                 />
                             )}
                             {(userRole==="owner" || userRole==="admin") && (
