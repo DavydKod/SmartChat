@@ -6,7 +6,7 @@ import {useSelector} from "react-redux";
 import CreateGroup from "./newGroupChat/newGroupChat";
 
 
-const UserInfo = ( { setShowNewGroup }) => {
+const UserInfo = ( { setShowNewGroup, setUserPr, deleteUser }) => {
     const {user} = useSelector((state) => state.user);
 
     const [showMenu, setShowMenu] = useState(false);
@@ -24,7 +24,11 @@ const UserInfo = ( { setShowNewGroup }) => {
                     <button className="">
                         <img src={moreIcon} alt=""/>
                     </button>
-                    {showMenu ? <DropMenu setShowNewGroup={setShowNewGroup} /> : null}
+                    {showMenu ? <DropMenu
+                        setShowNewGroup={setShowNewGroup}
+                        setUserPr={setUserPr}
+                        deleteUser={deleteUser}
+                    /> : null}
                 </li>
 
             </div>

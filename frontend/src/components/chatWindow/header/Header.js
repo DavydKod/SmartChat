@@ -2,13 +2,13 @@ import friendAvatar from "../../../images/avatar.png";
 import info from "../../../images/information.png";
 import close from "../../../images/close.png"
 import {useSelector} from "react-redux";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import MenuChat from "./MenuChat";
+import ChatInfo from "./ChatInfo";
 
 
-const Header = () => {
-    //const navigate = useNavigate();
-    const [showMenu, setShowMenu] = useState(false);
+const Header = ( { setUserPr, setShowChatInfo } ) => {
+    const [showChatMenu, setShowChatMenu] = useState(false);
     const {currentChat} = useSelector((state) => state.chats);
     const {user} = useSelector((state) => state.user);
     const {name} = currentChat;
@@ -38,11 +38,15 @@ const Header = () => {
                 </div>
             </div>
 
-            <div className="icons relative" onClick={() => setShowMenu((prev) => !prev)}>
+            <div className="icons relative" onClick={() => setShowChatMenu((prev) => !prev)}>
                 <button>
                     <img src={info} alt=""/>
                 </button>
-                {showMenu ? <MenuChat /> : null}
+                {showChatMenu && (
+                    <MenuChat setShowChatMenu={setShowChatMenu}
+                              setShowChatInfo={setShowChatInfo}
+                    />
+                )}
 
                 <button onClick={handleClose}>
                     <img src={close} alt="" />

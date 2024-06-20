@@ -1,8 +1,11 @@
+import {useSelector} from "react-redux";
+import React, {useState} from "react";
+import userAvatar from "../../../images/avatar.png";
+import moreIcon from "../../../images/menu.png";
+import DropMenu from "../../sidePanel/header/DropMenu";
 
 
-import React, {useState} from 'react';
-
-const UserProfile = ({ setUserPr, deleteUser }) => {
+const ChatInfo2 = ({ setShowChatInfo }) => {
 
     const [name, setName] = useState('John Doe');
     const [tag, setTag] = useState('johndoe123');
@@ -60,20 +63,20 @@ const UserProfile = ({ setUserPr, deleteUser }) => {
 
                 <button
                     className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-700"
-                    onClick={() => setUserPr(false)}
+                    onClick={() => setShowChatInfo(false)}
                 >
                     Close
                 </button>
 
-                <button
+                {/*<button
                     className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700"
                     onClick={deleteUser}
                 >
                     Delete User
-                </button>
+                </button>*/}
             </div>
         </div>
     );
 };
 
-export default UserProfile;
+export default ChatInfo2;
