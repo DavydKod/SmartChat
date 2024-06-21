@@ -109,7 +109,51 @@ const openExistingChat = async (chatId) => {
     return chat
 };
 
+const addMembers = async (chatId, memberIds) => {
+    try {
+        // Find the existing chat by its ID
+        let chat = await chatModel.findById(chatId);
 
+        if (!chat) {
+            throw new Error("Chat not found");
+        }
+
+        // Check if the members to be added are already in the chat
+        const existingMemberIds = chat.members.map(member => member.user.toString());
+        const newMembers = memberIds.filter(id => !existingMemberIds.includes(id))
+            .map(id => ({ user: id, role: 'user' }));
+
+        if (newMembers.length === 0) {
+            return await chatModel.findById(chatId)
+                .populate('members.user', '-password')
+                .populate({
+                    path: 'lastMessage',
+                    populate: {
+                        path: 'senderID',
+                        select: 'name tag email avatar'
+                    }
+                });
+        }
+
+        // Add new members to the chat
+        chat.members.push(...newMembers);
+        const updatedChat = await chat.save();
+
+        // Populate members' information for the updated chat
+        return await chatModel.findById(updatedChat._id)
+            .populate('members.user', '-password')
+            .populate({
+                path: 'lastMessage',
+                populate: {
+                    path: 'senderID',
+                    select: 'name tag email avatar'
+                }
+            });
+
+    } catch (error) {
+        throw new Error("Cannot add new members to the chat");
+    }
+};
 
 
 
@@ -187,5 +231,5 @@ const deleteChatService = async (chatId) => {
 };
 
 
-module.exports = { createPrivateChat, createGroupChat, openExistingChat, updateLastMessage,
+module.exports = { createPrivateChat, createGroupChat, openExistingChat, addMembers, updateLastMessage,
     updateUserRole, removeUserFromChat, deleteChatService }

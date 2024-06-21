@@ -36,38 +36,33 @@ const SidePanel = () => {
                 <CreateGroup setShowNewGroup={setShowNewGroup} />
             ) : (
                 <>
-                    <SearchBar
-                        setSearchResults={setSearchResults}
-                        inputRef={inputRef}
-                        inputValue={inputValue}
-                        setInputValue={setInputValue}
-                    />
-
-                    {searchResults.length > 0 ? (
-                        <SearchResults
-                            searchResults={searchResults}
-                            setSearchResults={setSearchResults}
-                            inputRef={inputRef}
-                            setInputValue={setInputValue}
+                    {userPr ? (
+                        <UserProfile
+                            setUserPr={setUserPr}
+                            deleteUser={deleteUser}
                         />
                     ) : (
-                        <Chats />
+                        <>
+                            <SearchBar
+                                setSearchResults={setSearchResults}
+                                inputRef={inputRef}
+                                inputValue={inputValue}
+                                setInputValue={setInputValue}
+                            />
+                            {searchResults.length > 0 ? (
+                                <SearchResults
+                                    searchResults={searchResults}
+                                    setSearchResults={setSearchResults}
+                                    inputRef={inputRef}
+                                    setInputValue={setInputValue}
+                                />
+                            ) : (
+                                <Chats />
+                            )}
+                        </>
                     )}
                 </>
             )}
-
-            {/*{userPr && (
-                <UserProfile
-                    setUserPr={setUserPr}
-                    deleteUser={deleteUser}
-                />
-            )}*/}
-
-
-
-
-
-
         </div>
     );
 

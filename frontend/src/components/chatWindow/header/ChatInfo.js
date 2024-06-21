@@ -43,13 +43,9 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
     if (!currentChat.isGroup) {
         friend = chatMembers[0]._id === user._id ? chatMembers[1] : chatMembers[0];
     }
-    console.log("nam",friend);
 
-
-    console.log("admins", currentChat.admins)
     const usersRoles = currentChat.members;
 
-    console.log("users",users)
     const owner = chatMembers[0];
 
     const handleRoleChange = async (userId) => {
@@ -125,6 +121,7 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
         } catch (error) {
             console.log(error);
         }
+        setShowChatInfo(false);
 
     };
 
@@ -170,7 +167,7 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
                 </div>
 
                 {(userRole === "owner" || userRole === "admin") && currentChat.isGroup && (
-                    <AddUsersToChat />
+                    <AddUsersToChat setShowChatInfo={setShowChatInfo} />
                 )}
 
                 <div className="flex justify-end space-x-2 mt-4">

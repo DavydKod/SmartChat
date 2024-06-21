@@ -10,7 +10,7 @@ import SearchBar from "../sidePanel/search/SearchBar";
 import SearchResults from "../sidePanel/search/SearchResults";
 import Chats from "../sidePanel/chats/Chats";
 import ChatInfo from "./header/ChatInfo";
-import ChatInfo2 from "./header/ChatInfo2";
+
 
 
 const ChatWindow = () => {
@@ -30,12 +30,10 @@ const ChatWindow = () => {
             dispatch(getChatMessages(values));
         }
     }, [dispatch, currentChat]);
-    console.log("msg: ", showChatInfo);
 
     const handleClose = () => {
         setShowChatInfo(false);
     };
-
 
 
     return (
@@ -54,17 +52,7 @@ const ChatWindow = () => {
                 </>
             )}
 
-
-            {/*<Center />*/}
-
             <Bottom />
-
-            {/*{userPr && (
-                <UserProfile
-                    setUserPr={setUserPr}
-                    deleteUser={deleteUser}
-                />
-            )}*/}
 
         </div>
     );

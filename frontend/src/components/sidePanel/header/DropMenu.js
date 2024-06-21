@@ -9,9 +9,6 @@ import {useEffect, useState} from "react";
 
 const MenuDrop = ({ setShowNewGroup, setUserPr }) => {
     const dispatch = useDispatch();
-    //const [modal, setModal] = useState(false);
-
-
 
 
     const handleLogout = () => {
