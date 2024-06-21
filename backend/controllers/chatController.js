@@ -1,6 +1,6 @@
 const chatModel = require("../models/chatModel");
 const mongoose = require("mongoose");
-const { createPrivateChat, createGroupChat, openExistingChat, updateUserRole,
+const { createPrivateChat, createGroupChat, openExistingChat, addMembers, updateUserRole,
     removeUserFromChat, deleteChatService } = require("../services/chatService")
 
 const createChat = async (req, res) => {
@@ -68,7 +68,14 @@ const userChats = async (req, res) => {
                 }
             });
 
-        res.status(200).json(chats);
+        // Sort the chats based on the lastMessage dateCreated
+        const sortedChats = chats.sort((a, b) => {
+            if (!a.lastMessage) return 1;
+            if (!b.lastMessage) return -1;
+            return new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt);
+        });
+
+        res.status(200).json(sortedChats);
     } catch (error) {
         console.error("Error finding user chats:", error);
         res.status(500).json(error);
@@ -99,6 +106,21 @@ const deleteUserFromChat = async (req, res) => {
     }
 };
 
+const addMembersToChat = async (req, res) => {
+    const { chatId, memberIds } = req.body;
+
+    if (!chatId || !memberIds || !Array.isArray(memberIds)) {
+        return res.status(400).json({ message: "Invalid request data" });
+    }
+
+    try {
+        const updatedChat = await addMembers(chatId, memberIds);
+        return res.status(200).json(updatedChat);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 const deleteChat = async (req, res) => {
     const { chatId } = req.params;
 
@@ -114,4 +136,4 @@ const deleteChat = async (req, res) => {
 
 
 
-module.exports = { createChat, openChat, userChats, changeUserRole, deleteUserFromChat, deleteChat };
+module.exports = { createChat, openChat, userChats, changeUserRole, deleteUserFromChat, addMembersToChat, deleteChat };

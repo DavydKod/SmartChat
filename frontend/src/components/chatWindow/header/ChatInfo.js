@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import axios from 'axios';
 import {useSelector} from "react-redux";
 import AddUsers from "../../sidePanel/header/newGroupChat/AddUsers";
@@ -6,7 +6,7 @@ import AddUsersToChat from "./AddUsersToChat";
 import Switch from "react-switch";
 
 
-const ChatInfo = ({}) => {
+const ChatInfo = ({ onClose, setShowChatInfo }) => {
     const { currentChat } = useSelector((state) => state.chats);
     const { user } = useSelector((state) => state.user);
     console.log("user", user);
@@ -20,16 +20,32 @@ const ChatInfo = ({}) => {
     const [admins, setAdmins] = useState(adminIds);
     const [changes, setChanges] = useState({});
 
+    const modalRef = useRef();
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (modalRef.current && !modalRef.current.contains(event.target)) {
+                onClose();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [onClose]);
+
     // user role
     const userRole = currentChat.members.find(member => member.user._id === user._id).role;
-    //console.log("curr",userRole)
-    //const currentUserRole = currentMember ? currentMember.role : 'user';
 
+    // for private chats
+    let friend;
+    if (!currentChat.isGroup) {
+        friend = chatMembers[0]._id === user._id ? chatMembers[1] : chatMembers[0];
+    }
 
-    console.log("admins", currentChat.admins)
     const usersRoles = currentChat.members;
 
-    console.log("users",users)
     const owner = chatMembers[0];
 
     const handleRoleChange = async (userId) => {
@@ -71,27 +87,6 @@ const ChatInfo = ({}) => {
 
     };
 
-    const handleSubmit = () => {
-        // Update the admins list based on changes
-        let updatedAdmins = [...admins];
-
-        Object.keys(changes).forEach(userId => {
-            if (changes[userId] && !updatedAdmins.includes(userId)) {
-                updatedAdmins.push(userId); // Add to admins
-            } else if (!changes[userId] && updatedAdmins.includes(userId)) {
-                updatedAdmins = updatedAdmins.filter(adminId => adminId !== userId); // Remove from admins
-            }
-        });
-        console.log("upd adm",updatedAdmins);
-
-        // Send the updated list of admins to the backend
-        /*axios.put('/api/admins', { admins: updatedAdmins }).then(response => {
-            console.log('Admins updated successfully:', response);
-        }).catch(error => {
-            console.error('Error updating admins:', error);
-        });*/
-    };
-
     const handleDeleteUser = async (userId) => {
         setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
 
@@ -126,31 +121,35 @@ const ChatInfo = ({}) => {
         } catch (error) {
             console.log(error);
         }
-    };
-
-    const handleLeaveChat = () => {
+        setShowChatInfo(false);
 
     };
-
-
-
 
     return (
-        <div className="popup">
-            <div className="popup-inner">
-                <h2 className="chat-name">{currentChat.name}</h2>
-                <p className="user-count">Number of users: {users.length + 1}</p>
-                <p className="owner">Chat owner: {owner.name}</p>
-                <div className="users-list">
-                    <div className="user-row header">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div ref={modalRef} className="p-8 rounded-lg shadow-xl relative bg-white w-96 h-auto mx-auto mt-10">
+                <button className="absolute top-2 right-2 text-xl" onClick={onClose}>&times;</button>
+
+                {currentChat.isGroup ? (
+                    <>
+                        <h2 className="text-2xl mb-4 font-semibold">{currentChat.name}</h2>
+                        <p className="mb-2">Number of users: {users.length + 1}</p>
+                        <p className="mb-4">Chat owner: {owner.name}</p>
+                    </>
+                ) : (
+                    <h2 className="text-2xl mb-4 font-semibold">Personal chat with {friend.name}</h2>
+                )}
+
+                <div className="users-list mb-6">
+                    <div className="user-row header font-semibold mb-2">
                         <span>User</span>
-                        {userRole === "owner" && <span>Admin</span>}
-                        {(userRole === "owner" || userRole === "admin") && <span>Delete</span>}
+                        {userRole === "owner" && currentChat.isGroup && <span>Admin</span>}
+                        {(userRole === "owner" || userRole === "admin") && currentChat.isGroup && <span>Delete</span>}
                     </div>
                     {users.map(user => (
-                        <div key={user._id} className="user-row">
+                        <div key={user._id} className="user-row flex justify-between mb-2">
                             <span>{user.name}</span>
-                            {userRole === "owner" && (
+                            {userRole === "owner" && currentChat.isGroup && (
                                 <Switch
                                     onChange={() => handleRoleChange(user._id)}
                                     checked={changes[user._id] ? changes[user._id] === 'admin' : admins.includes(user._id)}
@@ -160,53 +159,40 @@ const ChatInfo = ({}) => {
                                     checkedIcon={false}
                                 />
                             )}
-                            {(userRole === "owner" || userRole === "admin") && (
-                                <button onClick={() => handleDeleteUser(user._id)}>Delete</button>
+                            {(userRole === "owner" || userRole === "admin") && currentChat.isGroup && (
+                                <button className="text-red-500 hover:text-red-700" onClick={() => handleDeleteUser(user._id)}>Delete</button>
                             )}
                         </div>
                     ))}
                 </div>
-                {(userRole === "owner" || userRole === "admin") && (
-                    <>
-                        <button className="submit-button" onClick={handleSubmit}>Submit Changes</button>
-                        <AddUsersToChat
 
-
-                        />
-                    </>
-
+                {(userRole === "owner" || userRole === "admin") && currentChat.isGroup && (
+                    <AddUsersToChat setShowChatInfo={setShowChatInfo} />
                 )}
 
-                <div className="chat-actions">
+                <div className="flex justify-end space-x-2 mt-4">
+                    <button
+                        className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-700"
+                        onClick={() => setShowChatInfo(false)}
+                    >
+                        Close
+                    </button>
                     {(currentChat.isGroup && userRole === "owner") || !currentChat.isGroup ? (
-                        <button className="delete-chat-button" style={{
-                            backgroundColor: 'red',
-                            color: 'white',
-                            padding: '10px 20px',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            fontSize: '16px',
-                            marginTop: '20px'
-                        }} onClick={handleDeleteChat}>
+                        <button
+                            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700"
+                            onClick={handleDeleteChat}
+                        >
                             Delete Chat
                         </button>
                     ) : (
-                        <button className="leave-chat-button" style={{
-                            backgroundColor: 'red',
-                            color: 'white',
-                            padding: '10px 20px',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            fontSize: '16px',
-                            marginTop: '20px'
-                        }} onClick={() => handleDeleteUser(user._id)}>
+                        <button
+                            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700"
+                            onClick={() => handleDeleteUser(user._id)}
+                        >
                             Leave Chat
                         </button>
                     )}
                 </div>
-
             </div>
         </div>
     );

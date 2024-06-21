@@ -73,7 +73,7 @@ export default function CreateGroup({ setShowNewGroup }) {
 
     return (
         <div className="createGroupAnimation relative flex0030 h-full z-40">
-            {/*Container*/}
+
             <div className="mt-5">
 
                 <button

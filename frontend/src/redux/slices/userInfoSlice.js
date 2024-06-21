@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {signIn, SignUp} from "../actions/userActions";
+import {signIn, SignUp, UpdateUser} from "../actions/userActions";
 
 const initialState = {
     status: 'idle',
@@ -44,6 +44,7 @@ export const userInfoSlice = createSlice({
                 state.status = "succeeded";
                 state.error = null;
                 state.user = action.payload.user;
+                console.log("sign in payload", action.payload);
             })
             .addCase(signIn.rejected, (state, action) => {
                 state.status = "failed";
@@ -59,6 +60,20 @@ export const userInfoSlice = createSlice({
                 state.user = action.payload.user;
             })
             .addCase(SignUp.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload;
+            })
+
+            .addCase(UpdateUser.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(UpdateUser.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.error = null;
+                state.user = action.payload.user;
+                console.log("payload", action.payload);
+            })
+            .addCase(UpdateUser.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload;
             });

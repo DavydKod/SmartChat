@@ -1,7 +1,7 @@
 const userModel = require('../models/userModel')
 const bcrypt = require('bcrypt');
 
-const updateUser = async (userId, { name, tag, email, currentPassword, newPassword, confirmPassword }) => {
+const updateUser = async (userId, { name, tag, email, newPassword, confirmPassword }) => {
     // Find the user by ID
     const user = await findUser(userId);
 
@@ -9,15 +9,28 @@ const updateUser = async (userId, { name, tag, email, currentPassword, newPasswo
         throw new Error('User not found');
     }
 
-    // Validate the current password
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch) {
-        throw new Error('Incorrect current password');
-    }
-
     // Check if new passwords match
     if (newPassword !== confirmPassword) {
         throw new Error('New passwords do not match');
+    }
+
+    // Check if tag or email already exists
+    if (tag || email) {
+        const existingUser = await userModel.findOne({
+            $or: [
+                { tag: tag, _id: { $ne: userId } },
+                { email: email, _id: { $ne: userId } }
+            ]
+        });
+
+        if (existingUser) {
+            if (existingUser.tag === tag) {
+                throw new Error('User with such tag already exists');
+            }
+            if (existingUser.email === email) {
+                throw new Error('User with such email already exists');
+            }
+        }
     }
 
     // Update user information
@@ -32,7 +45,7 @@ const updateUser = async (userId, { name, tag, email, currentPassword, newPasswo
     // Save the updated user
     await user.save();
 
-    return { message: 'User updated successfully', user };
+    return user;
 };
 
 const deleteUser = async (userId, currentPassword) => {
