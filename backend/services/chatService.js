@@ -155,60 +155,15 @@ const addMembers = async (chatId, memberIds) => {
     }
 };
 
-
-
-/*const createConversation = async (data) => {
-    const newConvo = await chatModel.create(data);
-    if (!newConvo)
-        throw createError("Oops...Something went wrong !");
-    return newConvo;
-};
-
-const populateConversation = async (
-    id,
-    fieldToPopulate,
-    fieldsToRemove
-) => {
-    const populatedConvo = await chatModel.findOne({ _id: id }).populate(
-        fieldToPopulate,
-        fieldsToRemove
-    );
-    if (!populatedConvo)
-        throw createError("Oops...Something went wrong !");
-    return populatedConvo;
-};
-
-const getUserConversations = async (user_id) => {
-    let conversations;
-    await chatModel.find({
-        users: { $elemMatch: { $eq: user_id } },
-    })
-        .populate("members", "-password")
-        .populate("admins", "-password")
-        .populate("lastMessage")
-        .sort({ updatedAt: -1 })
-        .then(async (results) => {
-            results = await userModel.populate(results, {
-                path: "lastMessage.senderId",
-                select: "name tag email avatar",
-            });
-            conversations = results;
-        })
-        .catch((err) => {
-            throw createError("Oops...Something went wrong !");
-        });
-    return conversations;
-};*/
-
 const updateLastMessage = async (convo_id, msg) => {
-    const updatedConvo = await chatModel.findByIdAndUpdate(convo_id, {
+    const chat = await chatModel.findByIdAndUpdate(convo_id, {
         lastMessage: msg,
     });
-    if (!updatedConvo)
+    if (!chat)
         throw createError("Oops...Something went wrong !");
 
     console.log("updated")
-    return updatedConvo;
+    return chat;
 };
 
 // Service to update a user's role
@@ -230,6 +185,19 @@ const deleteChatService = async (chatId) => {
     await chatModel.findByIdAndDelete(chatId);
 };
 
+const changeGroupNameService = async (chatId, newName) => {
+    const chat = await chatModel.findById(chatId);
+
+    if (!chat || !chat.isGroup) {
+        throw new Error('Group chat not found');
+    }
+
+    chat.name = newName;
+    await chat.save();
+
+    return chat;
+};
+
 
 module.exports = { createPrivateChat, createGroupChat, openExistingChat, addMembers, updateLastMessage,
-    updateUserRole, removeUserFromChat, deleteChatService }
+    updateUserRole, removeUserFromChat, deleteChatService, changeGroupNameService }

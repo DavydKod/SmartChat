@@ -1,7 +1,7 @@
 const chatModel = require("../models/chatModel");
 const mongoose = require("mongoose");
 const { createPrivateChat, createGroupChat, openExistingChat, addMembers, updateUserRole,
-    removeUserFromChat, deleteChatService } = require("../services/chatService")
+    removeUserFromChat, deleteChatService, changeGroupNameService } = require("../services/chatService")
 
 const createChat = async (req, res) => {
     const userId = req.params.userId;
@@ -133,7 +133,23 @@ const deleteChat = async (req, res) => {
     }
 };
 
+const changeGroupName = async (req, res) => {
+    const { chatId, newName } = req.body;
+
+    try {
+        const updatedChat = await changeGroupNameService(chatId, newName);
+        res.status(200).json({
+            message: 'Group name updated successfully',
+            chat: updatedChat,
+        });
+    } catch (error) {
+        console.error('Error updating group name:', error);
+        res.status(500).json({ message: 'Error updating group name' });
+    }
+};
 
 
 
-module.exports = { createChat, openChat, userChats, changeUserRole, deleteUserFromChat, addMembersToChat, deleteChat };
+
+module.exports = { createChat, openChat, userChats, changeUserRole, deleteUserFromChat,
+    addMembersToChat, deleteChat, changeGroupName };

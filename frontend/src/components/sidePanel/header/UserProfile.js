@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import {signIn, UpdateUser} from "../../../redux/actions/userActions";
+import {UpdateUser} from "../../../redux/actions/userActions";
 
 const UserProfile = ({ setUserPr, deleteUser }) => {
     const dispatch = useDispatch();
@@ -188,7 +188,7 @@ const UserProfile = ({ setUserPr, deleteUser }) => {
                         className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700"
                         onClick={deleteUser}
                     >
-                        Delete User
+                        Delete Profile
                     </button>
                 </div>
             </form>

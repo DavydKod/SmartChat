@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
-import {createChat} from "../../../redux/actions/chatActions";
+import {createChat, getChats} from "../../../redux/actions/chatActions";
 import backIcon from "../../../images/close.png";
 import GroupName from "../../sidePanel/header/newGroupChat/GroupName";
 import AddUsers from "../../sidePanel/header/newGroupChat/AddUsers";
@@ -93,6 +93,7 @@ export default function AddUsersToChat( {setShowChatInfo} ) {
 
         }
         setShowChatInfo(false);
+
     };
 
 

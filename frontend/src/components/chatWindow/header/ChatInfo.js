@@ -4,11 +4,13 @@ import {useSelector} from "react-redux";
 import AddUsers from "../../sidePanel/header/newGroupChat/AddUsers";
 import AddUsersToChat from "./AddUsersToChat";
 import Switch from "react-switch";
+import GroupName from "../../sidePanel/header/newGroupChat/GroupName";
 
 
 const ChatInfo = ({ onClose, setShowChatInfo }) => {
     const { currentChat } = useSelector((state) => state.chats);
     const { user } = useSelector((state) => state.user);
+    const [groupName, setGroupName] = useState("");
     console.log("user", user);
     const oldAdmins = currentChat.admins;
     const adminIds = oldAdmins.map(admin => admin._id);
@@ -125,6 +127,28 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
 
     };
 
+    const handleChangeGroupName = async () => {
+        try {
+            await axios.put(
+                `http://localhost:4000/api/chat/updateName`,
+                {
+                    chatId: currentChat._id,
+                    newName: groupName,
+                },
+
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                }
+            );
+        } catch (error) {
+            console.log(error);
+        }
+        setShowChatInfo(false);
+
+    };
+
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div ref={modalRef} className="p-8 rounded-lg shadow-xl relative bg-white w-96 h-auto mx-auto mt-10">
@@ -140,6 +164,21 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
                     <h2 className="text-2xl mb-4 font-semibold">Personal chat with {friend.name}</h2>
                 )}
 
+                {currentChat.isGroup ? (
+                    <>
+                        <GroupName groupName={groupName} setGroupName={setGroupName} />
+
+                        <button
+                            className="mt-2 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-700"
+                            onClick={handleChangeGroupName}
+                        >
+                            Change Group Name
+                        </button>
+                    </>
+                ) : (
+                    ""
+                )}
+
                 <div className="users-list mb-6">
                     <div className="user-row header font-semibold mb-2">
                         <span>User</span>
@@ -148,7 +187,7 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
                     </div>
                     {users.map(user => (
                         <div key={user._id} className="user-row flex justify-between mb-2">
-                            <span>{user.name}</span>
+                            <span>{user.name + " @" + user.tag }</span>
                             {userRole === "owner" && currentChat.isGroup && (
                                 <Switch
                                     onChange={() => handleRoleChange(user._id)}

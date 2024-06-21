@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router();
 //const { openChat, getChats} = require("../controllers/chatController");
 const { createChat, openChat, userChats, changeUserRole, deleteUserFromChat,
-    deleteChat, addMembersToChat} = require("../controllers/chatController");
+    deleteChat, addMembersToChat, changeGroupName} = require("../controllers/chatController");
 const { AuthMiddleware } = require("../middlewares/auth.middleware");
 
 
@@ -15,6 +15,7 @@ router.route('/deleteUser').put(AuthMiddleware, deleteUserFromChat);
 router.route('/addMembers').post(AuthMiddleware, addMembersToChat);
 
 router.route('/deleteChat/:chatId').delete(AuthMiddleware, deleteChat);
+router.route('/updateName').put(AuthMiddleware, changeGroupName);
 
 
 

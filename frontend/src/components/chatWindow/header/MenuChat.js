@@ -21,23 +21,11 @@ const MenuChat = ( { setShowChatMenu, setShowChatInfo } ) => {
                     className="py-3 pl-5 cursor-pointer hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-700 hover:text-white rounded-t-md"
                     onClick={() => setShowChatInfo(true)}
                 >
-                    <span>Profile</span>
+                    <span>Chat Info</span>
                 </li>
-
-
-
-
-                <li
-                    className="py-3 pl-5 cursor-pointer hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-700 hover:text-white"
-                    /*onClick={() => setShowNewGroup(true)}*/
-                >
-                    <span>Create group</span>
-                </li>
-
 
             </ul>
         </div>
-
 
 
     );
