@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthForm from "../components/auth/AuthForm"; // Import the logo image
+import LoginForm from "../components/auth/LoginForm"; // Import the logo image
 
 const Login = () => {
     return (
@@ -7,13 +7,11 @@ const Login = () => {
 
             <div className="mt-8 w-full sm:max-w-md sm:mx-auto">
 
-                <AuthForm/>
+                <LoginForm/>
             </div>
             <div className="mt-auto"></div>
 
         </div>
-
-
     );
 }
 

@@ -4,7 +4,6 @@ import {useEffect, useRef} from "react";
 
 
 const Center = () => {
-    const {currentChat} = useSelector((state) => state.chats);
     const {messages} = useSelector((state) => state.chats);
     const {user} = useSelector((state) => state.user);
     const chatEnd = useRef();
@@ -15,7 +14,6 @@ const Center = () => {
     const scroll = () => {
         chatEnd.current.scrollIntoView({ behavior: "smooth" });
     };
-
 
 
     return (

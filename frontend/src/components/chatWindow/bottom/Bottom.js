@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {sendMessage} from "../../../redux/actions/chatActions";
 import SocketContext from "../../../context/Context";
 
-
 function Bottom ( {socket}) {
     const dispatch = useDispatch();
     const { currentChat } = useSelector((state)=>state.chats)
@@ -43,9 +42,7 @@ function Bottom ( {socket}) {
             token: user.token,
             content: [],
         } ));
-        console.log("tm",textMessage)
         const membersIds = currentChat.members.map(member => member.user._id);
-        console.log("mi", membersIds);
         socket.emit("send message", textMessage.payload, membersIds);
         setText("");
     };

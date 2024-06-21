@@ -4,8 +4,6 @@ import avatar from "../../images/avatar.png"
 
 const Message = ({ message, sender, time, author }) => {
 
-
-
     return (
         <div className={`message relative
         ${author ? "own" : "texts"}

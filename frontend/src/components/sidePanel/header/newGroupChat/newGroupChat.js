@@ -44,9 +44,7 @@ export default function CreateGroup({ setShowNewGroup }) {
                     setSearchResults([]);
                 }
 
-            } catch (error) {
-                console.log(error.response.data.error.message);
-            }
+            } catch (error) {}
         } else {
             setSearchResults([]);
         }

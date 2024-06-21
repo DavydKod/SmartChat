@@ -4,13 +4,7 @@ import Center from "./Center";
 import {useDispatch, useSelector} from "react-redux";
 import {getChatMessages} from "../../redux/actions/chatActions";
 import Bottom from "./bottom/Bottom";
-import UserProfile from "../sidePanel/header/UserProfile";
-import CreateGroup from "../sidePanel/header/newGroupChat/newGroupChat";
-import SearchBar from "../sidePanel/search/SearchBar";
-import SearchResults from "../sidePanel/search/SearchResults";
-import Chats from "../sidePanel/chats/Chats";
 import ChatInfo from "./header/ChatInfo";
-
 
 
 const ChatWindow = () => {
@@ -40,7 +34,6 @@ const ChatWindow = () => {
         <div className="chatWindow">
 
             <Header setShowChatInfo={setShowChatInfo} />
-
 
             {showChatInfo ? (
                 <ChatInfo

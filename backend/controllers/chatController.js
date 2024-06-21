@@ -131,6 +131,7 @@ const deleteChat = async (req, res) => {
         console.error('Error deleting chat:', error);
         res.status(500).json({ message: 'Error deleting chat' });
     }
+
 };
 
 const changeGroupName = async (req, res) => {

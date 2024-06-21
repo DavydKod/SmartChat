@@ -1,12 +1,13 @@
 const { findUsers, updateUser, deleteUser } = require("../services/userService");
+const userModel = require('../models/userModel')
 
 const updateUserController = async (req, res) => {
     const userId = req.user.id;
-    const { name, tag, email, newPassword, confirmNewPassword, token } = req.body;
+    const { name, tag, email, newPassword, token } = req.body;
 
     try {
         const user = await updateUser(userId, {
-            name, tag, email, newPassword, confirmNewPassword
+            name, tag, email, newPassword,
         });
 
         res.json({
@@ -39,14 +40,30 @@ const findUsersController = async (req, res, next) => {
 
 const deleteUserController = async (req, res) => {
     const userId = req.user.id;
-    const { currentPassword } = req.body;
+    //const { currentPassword } = req.body;
 
     try {
-        const result = await deleteUser(userId, currentPassword);
+        const result = await deleteUser(userId);
         res.status(200).json(result);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 };
 
-module.exports = { updateUserController, findUsersController, deleteUserController }
+const checkUnique = async (req, res) => {
+    try {
+        const { tag, email } = req.body;
+        const tagExists = await userModel.findOne({ tag });
+        const emailExists = await userModel.findOne({ email });
+
+        res.json({
+            tagExists: !!tagExists,
+            emailExists: !!emailExists,
+        });
+    } catch (error) {
+        console.error('Error checking unique fields:', error);
+        res.status(500).json({ message: 'Error checking unique fields' });
+    }
+};
+
+module.exports = { updateUserController, findUsersController, deleteUserController, checkUnique }

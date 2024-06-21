@@ -7,9 +7,7 @@ const SearchBar = ({ setSearchResults, inputRef, inputValue, setInputValue }) =>
     const { token } = user;
 
     const handleSearch = async (e) => {
-        console.log(e.target.value);
         if (e.target.value && e.key === "Enter") {
-            console.log("just clicked");
 
             try {
                 const { data } = await axios.get(
@@ -21,9 +19,7 @@ const SearchBar = ({ setSearchResults, inputRef, inputValue, setInputValue }) =>
                     }
                 );
                 setSearchResults(data);
-            } catch (error) {
-                console.log(error.response.data.error.message);
-            }
+            } catch (error) {}
         } else {
             setSearchResults([]);
         }
@@ -68,8 +64,6 @@ const SearchBar = ({ setSearchResults, inputRef, inputValue, setInputValue }) =>
                     />
                 )}
             </div>
-
-            {/*<img src={addFriend} alt="" className="add-chat" />*/}
         </div>
     );
 }

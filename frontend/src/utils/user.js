@@ -1,3 +1,0 @@
-const getUserName = (userId) => {
-
-}

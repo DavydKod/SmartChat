@@ -42,7 +42,6 @@ export const UpdateUser = createAsyncThunk(
                     email,
                     newPassword,
                     token
-
             },
                 {
                     headers: {

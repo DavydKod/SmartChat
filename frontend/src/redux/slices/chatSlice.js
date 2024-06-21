@@ -1,6 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createChat, getChatMessages, getChats, openChat, sendMessage} from "../actions/chatActions";
+import {createChat, deleteChat, getChatMessages, getChats, openChat, sendMessage} from "../actions/chatActions";
 import { signOut } from './userInfoSlice';
+import {useSelector} from "react-redux";
 
 
 const initialState = {
@@ -133,7 +134,19 @@ export const chatSlice = createSlice({
                 state.chats = [];
                 state.currentChat = { admins: [] };
                 state.messages = [];
-            });
+            })
+
+            .addCase(deleteChat.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(deleteChat.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+
+            })
+            .addCase(deleteChat.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
     }
 });
 

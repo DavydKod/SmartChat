@@ -3,8 +3,9 @@ import {useDispatch, useSelector} from "react-redux";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {UpdateUser} from "../../../redux/actions/userActions";
+import axios from "axios";
 
-const UserProfile = ({ setUserPr, deleteUser }) => {
+const UserProfile = ({ setUserPr }) => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
     const [isEditable, setIsEditable] = useState(false);
@@ -14,23 +15,36 @@ const UserProfile = ({ setUserPr, deleteUser }) => {
         setIsEditable(!isEditable);
     };
 
+    const checkUniqueTag = async (tag) => {
+        const response = await axios.post('http://localhost:4000/api/user/checkUnique', { tag });
+        return response.data.tagExists;
+    };
+
+    const checkUniqueEmail = async (email) => {
+        const response = await axios.post('http://localhost:4000/api/user/checkUnique', { email });
+        return response.data.emailExists;
+    };
+
     const validationSchema = Yup.object({
-        name: Yup.string()
-            .max(64, 'Name must be 64 characters or less'),
-        tag: Yup.string()
-            .max(16, 'Tag must be 16 characters or less'),
-        email: Yup.string()
-            .email('Invalid email address')
-            .max(64, 'Email must be 64 characters or less'),
-        newPassword: Yup.string()
-            .min(6, 'Password must be at least 6 characters')
-            .max(64, 'Password must be 64 characters or less'),
-        confirmNewPassword: Yup.string()
-            .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
-            .when('newPassword', {
-                is: (val) => val && val.length > 0,
-                then: Yup.string().required('Confirm New Password is required'),
+        name: Yup.string().max(64, 'Name must be 64 characters or less'),
+        tag: Yup.string().max(16, 'Tag must be 16 characters or less')
+            .test('checkUniqueTag', 'Tag is already in use', async (value) => {
+                if (value && value !== user.tag) {
+                    const isUnique = await checkUniqueTag(value);
+                    return !isUnique;
+                }
+                return true;
             }),
+        email: Yup.string().email('Invalid email address').max(64, 'Email must be 64 characters or less')
+            .test('checkUniqueEmail', 'Email is already in use', async (value) => {
+                if (value && value !== user.email) {
+                    const isUnique = await checkUniqueEmail(value);
+                    return !isUnique;
+                }
+                return true;
+            }),
+        newPassword: Yup.string().min(6, 'Password must be at least 6 characters').max(64, 'Password must be 64 characters or less'),
+
     });
 
     const formik = useFormik({
@@ -39,7 +53,6 @@ const UserProfile = ({ setUserPr, deleteUser }) => {
             tag: user.tag,
             email: user.email,
             newPassword: '',
-            confirmNewPassword: '',
         },
         validationSchema,
         onSubmit: async (values) => {
@@ -68,6 +81,22 @@ const UserProfile = ({ setUserPr, deleteUser }) => {
             }
         },
     });
+
+    const deleteUser = async () => {
+
+        try {
+            const response = await axios.delete('http://localhost:4000/api/user/delete', {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            });
+            setUserPr(false);
+            return response.data;
+        } catch (error) {
+            throw error.response.data;
+        }
+    }
+
 
     return (
         <div className="p-10 rounded-lg shadow-xl relative bg-white max-w-2xl mx-auto mt-20">
@@ -124,7 +153,7 @@ const UserProfile = ({ setUserPr, deleteUser }) => {
                     ) : null}
                 </div>
 
-                {/*<div className="mb-4">
+                <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">New Password</label>
                     <input
                         type="password"
@@ -139,22 +168,6 @@ const UserProfile = ({ setUserPr, deleteUser }) => {
                         <div className="text-red-500">{formik.errors.newPassword}</div>
                     ) : null}
                 </div>
-
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Confirm New Password</label>
-                    <input
-                        type="password"
-                        name="confirmNewPassword"
-                        value={formik.values.confirmNewPassword}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        readOnly={!isEditable}
-                    />
-                    {formik.touched.confirmNewPassword && formik.errors.confirmNewPassword ? (
-                        <div className="text-red-500">{formik.errors.confirmNewPassword}</div>
-                    ) : null}
-                </div>*/}
 
                 <div className="flex justify-end space-x-2 mt-6">
                     {isEditable ? (
@@ -183,13 +196,13 @@ const UserProfile = ({ setUserPr, deleteUser }) => {
                         Close
                     </button>
 
-                    <button
+                    {/*<button
                         type="button"
                         className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700"
                         onClick={deleteUser}
                     >
                         Delete Profile
-                    </button>
+                    </button>*/}
                 </div>
             </form>
         </div>

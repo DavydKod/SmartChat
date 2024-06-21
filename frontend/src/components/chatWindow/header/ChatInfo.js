@@ -1,22 +1,21 @@
 import React, { useState, useEffect, useRef  } from 'react';
 import axios from 'axios';
-import {useSelector} from "react-redux";
-import AddUsers from "../../sidePanel/header/newGroupChat/AddUsers";
+import {useDispatch, useSelector} from "react-redux";
 import AddUsersToChat from "./AddUsersToChat";
 import Switch from "react-switch";
 import GroupName from "../../sidePanel/header/newGroupChat/GroupName";
+import {deleteChat} from "../../../redux/actions/chatActions";
 
 
 const ChatInfo = ({ onClose, setShowChatInfo }) => {
+    const dispatch = useDispatch();
     const { currentChat } = useSelector((state) => state.chats);
     const { user } = useSelector((state) => state.user);
     const [groupName, setGroupName] = useState("");
-    console.log("user", user);
     const oldAdmins = currentChat.admins;
     const adminIds = oldAdmins.map(admin => admin._id);
     const chatMembers = currentChat.members.map(member => member.user);
     const initUsers = currentChat.members.map(member => member.user).filter(member => member._id !== user._id);
-
 
     const [users, setUsers] = useState(initUsers);
     const [admins, setAdmins] = useState(adminIds);
@@ -46,15 +45,11 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
         friend = chatMembers[0]._id === user._id ? chatMembers[1] : chatMembers[0];
     }
 
-    const usersRoles = currentChat.members;
-
     const owner = chatMembers[0];
 
     const handleRoleChange = async (userId) => {
-        console.log("here");
 
         const newRole = admins.includes(userId) ? 'user' : 'admin';
-        console.log("id: role",userId, newRole);
         setChanges(prevChanges => ({
             ...prevChanges,
             [userId]: newRole
@@ -66,7 +61,6 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
         } else {
             setAdmins(prevAdmins => [...prevAdmins, userId]);
         }
-        console.log("adm",admins);
 
         try {
             await axios.put(
@@ -83,9 +77,7 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
                 }
             );
 
-        } catch (error) {
-            console.log(error);
-        }
+        } catch (error) {}
 
     };
 
@@ -106,13 +98,20 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
                 }
             );
 
-        } catch (error) {
-            console.log(error);
-        }
+        } catch (error) {}
     };
 
     const handleDeleteChat = async () => {
-        try {
+
+        const values = {
+            chatID: currentChat._id,
+            token: user.token
+        }
+
+        await dispatch(deleteChat(values));
+        setShowChatInfo(false);
+
+        /*try {
             await axios.delete(
                 `http://localhost:4000/api/chat/deleteChat/${currentChat._id}`, {
                     headers: {
@@ -123,7 +122,7 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
         } catch (error) {
             console.log(error);
         }
-        setShowChatInfo(false);
+        setShowChatInfo(false);*/
 
     };
 
@@ -142,9 +141,7 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
                     },
                 }
             );
-        } catch (error) {
-            console.log(error);
-        }
+        } catch (error) {}
         setShowChatInfo(false);
 
     };
@@ -164,7 +161,7 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
                     <h2 className="text-2xl mb-4 font-semibold">Personal chat with {friend.name}</h2>
                 )}
 
-                {currentChat.isGroup ? (
+                {(userRole === "owner" || userRole === "admin") && currentChat.isGroup ? (
                     <>
                         <GroupName groupName={groupName} setGroupName={setGroupName} />
 

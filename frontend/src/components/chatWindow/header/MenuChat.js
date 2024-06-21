@@ -1,16 +1,6 @@
-import {useDispatch} from "react-redux";
-import { signOut } from "../../../redux/slices/userInfoSlice";
-//import {useState} from "react";
-import UserProfile from "../../sidePanel/header/UserProfile";
-import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import ChatInfo from "./ChatInfo";
-import {useState} from "react";
 
 const MenuChat = ( { setShowChatMenu, setShowChatInfo } ) => {
-
-
-
 
     return (
 

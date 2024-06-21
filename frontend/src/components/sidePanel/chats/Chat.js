@@ -8,9 +8,8 @@ import SocketContext from "../../../context/Context";
 function Chat ({chat, socket}) {
     const dispatch = useDispatch();
     const { user } = useSelector((state)=>state.user)
+    const chats = useSelector((state)=>state.chats)
     const users = chat.members;
-
-    const memberIds = users.map(member => member.user._id).filter(id => id !== user._id);
 
 
     // for private chats
@@ -18,15 +17,6 @@ function Chat ({chat, socket}) {
     if (!chat.isGroup) {
         friend = users[0].user._id === user._id ? users[1].user : users[0].user;
     }
-
-
-    /*const values = {
-        token: user.token,
-        userId: user._id,
-        memberIds: memberIds,
-        chatName: chat.name,
-        isGroup: chat.isGroup
-    };*/
 
     const values = {
         token: user.token,

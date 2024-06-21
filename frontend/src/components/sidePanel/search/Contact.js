@@ -3,9 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {createChat} from "../../../redux/actions/chatActions";
 import SocketContext from "../../../context/Context";
 
-
 function Contact ( { socket, contact, setSearchResults, inputRef, setInputValue }) {
-
     const dispatch = useDispatch();
     const { user } = useSelector((state)=>state.user)
 
@@ -17,7 +15,6 @@ function Contact ( { socket, contact, setSearchResults, inputRef, setInputValue 
 
     const openChat = async () => {
         let foundChat = await dispatch(createChat(values));
-        console.log("fc",foundChat.payload._id);
         socket.emit("open chat", foundChat.payload._id)
         setSearchResults([]);
         inputRef.current.value = '';

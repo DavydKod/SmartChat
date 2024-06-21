@@ -104,3 +104,22 @@ export const sendMessage = createAsyncThunk(
         }
     }
 );
+
+export const deleteChat = createAsyncThunk(
+    'chat/delete',
+    async ({ token, chatID }, thunkAPI) => {
+        try {
+            const response = await axios.delete(
+                `http://localhost:4000/api/chat/deleteChat/${chatID}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            return response.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);

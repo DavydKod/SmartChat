@@ -10,20 +10,10 @@ const SidePanel = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [showNewGroup, setShowNewGroup] = useState(false);
     const [inputValue, setInputValue] = useState('');
-    const inputRef = useRef(null); // Create a ref for the input element
-
+    const inputRef = useRef(null);
 
     // user profile
     const [userPr, setUserPr] = useState(false);
-
-    console.log(searchResults);
-
-
-    const deleteUser = () => {
-        console.log("before", userPr)
-        setUserPr(false);
-        console.log("after",userPr)
-    }
 
     return (
         <div className="sidePanel">
@@ -39,7 +29,7 @@ const SidePanel = () => {
                     {userPr ? (
                         <UserProfile
                             setUserPr={setUserPr}
-                            deleteUser={deleteUser}
+                            //deleteUser={deleteUser}
                         />
                     ) : (
                         <>

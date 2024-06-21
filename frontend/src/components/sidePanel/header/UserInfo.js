@@ -3,8 +3,6 @@ import moreIcon from "../../../images/menu.png";
 import React, {useState} from "react";
 import DropMenu from "./DropMenu";
 import {useSelector} from "react-redux";
-import CreateGroup from "./newGroupChat/newGroupChat";
-
 
 const UserInfo = ( { setShowNewGroup, setUserPr, deleteUser }) => {
     const {user} = useSelector((state) => state.user);

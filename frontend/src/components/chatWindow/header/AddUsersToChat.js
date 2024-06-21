@@ -1,14 +1,10 @@
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import axios from "axios";
-import {createChat, getChats} from "../../../redux/actions/chatActions";
-import backIcon from "../../../images/close.png";
-import GroupName from "../../sidePanel/header/newGroupChat/GroupName";
 import AddUsers from "../../sidePanel/header/newGroupChat/AddUsers";
 import doneIcon from "../../../images/done.png";
 
 export default function AddUsersToChat( {setShowChatInfo} ) {
-    const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
     const { currentChat } = useSelector((state) => state.chats);
     const { status } = useSelector((state) => state.chats);
@@ -17,7 +13,6 @@ export default function AddUsersToChat( {setShowChatInfo} ) {
     const [selectedUsers, setSelectedUsers] = useState([]);
 
     const chatMembers = currentChat.members.map(member => member.user._id);
-    //const users = usersRoles.map(member => member.user)
 
     const handleSearch = async (e) => {
         setSearchResults([]);
@@ -40,7 +35,6 @@ export default function AddUsersToChat( {setShowChatInfo} ) {
                             label: user.name + " @"+user.tag,
                             avatar: ""
                         };
-                        console.log("temp",temp);
                         if (!chatMembers.includes(temp.value)) {
                             tempArray.push(temp);
                         }
@@ -51,9 +45,7 @@ export default function AddUsersToChat( {setShowChatInfo} ) {
                     setSearchResults([]);
                 }
 
-            } catch (error) {
-                console.log(error.response.data.error.message);
-            }
+            } catch (error) {}
         } else {
             setSearchResults([]);
         }
@@ -67,11 +59,9 @@ export default function AddUsersToChat( {setShowChatInfo} ) {
             });
             let values = {
                 userId: user._id,
-                //chatName: groupName,
                 memberIds: members,
                 token: user.token
             };
-            //let updatedChat = await dispatch(createChat(values));
 
             try {
                 const { data } = await axios.post(

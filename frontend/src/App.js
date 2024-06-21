@@ -12,8 +12,7 @@ const socket = io("http://localhost:4000");
 function App() {
     const { user } = useSelector((state) => state.user);
     const { token } = user;
-    console.log("token", token)
-    console.log("user",user);
+
   return (
       <div>
         <SocketContext.Provider value={socket}>

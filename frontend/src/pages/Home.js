@@ -9,7 +9,6 @@ import {updateMessages} from "../redux/slices/chatSlice";
 
 
 function Home( {socket} )  {
-    console.log("socket", socket)
     const dispatch = useDispatch();
     const {user} = useSelector((state) => state.user);
     const {currentChat} = useSelector((state) => state.chats)
@@ -29,8 +28,6 @@ function Home( {socket} )  {
     useEffect(() => {
         const handleMessage = (message) => {
             dispatch(updateMessages(message));
-            console.log("upd sent");
-            console.log("rec msg", message);
         };
 
         socket.on("receive message", handleMessage);
@@ -42,11 +39,11 @@ function Home( {socket} )  {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-cover bg-center bg-custom-image">
-            {/* ChatWindow App container below. Background above. */}
+
             <div className="flex w-[90vw] h-[90vh] bg-[rgba(255,255,255,0.50)] shadow-lg rounded-[12px] p-8 backdrop-blur-saturate border-custom">
                 <SidePanel />
                 {currentChat._id ? <ChatWindow /> : <Welcome />}
-                {/*<ChatWindow />*/}
+
             </div>
         </div>
     );

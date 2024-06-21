@@ -1,17 +1,12 @@
 const userModel = require('../models/userModel')
 const bcrypt = require('bcrypt');
 
-const updateUser = async (userId, { name, tag, email, newPassword, confirmPassword }) => {
+const updateUser = async (userId, { name, tag, email, newPassword }) => {
     // Find the user by ID
     const user = await findUser(userId);
 
     if (!user) {
         throw new Error('User not found');
-    }
-
-    // Check if new passwords match
-    if (newPassword !== confirmPassword) {
-        throw new Error('New passwords do not match');
     }
 
     // Check if tag or email already exists
@@ -48,19 +43,13 @@ const updateUser = async (userId, { name, tag, email, newPassword, confirmPasswo
     return user;
 };
 
-const deleteUser = async (userId, currentPassword) => {
+const deleteUser = async (userId) => {
 
     // Find the user by ID
     const user = await findUser(userId);
 
     if (!user) {
         throw new Error('User not found');
-    }
-
-    // Validate the current password
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch) {
-        throw new Error('Incorrect current password');
     }
 
     // Delete the user
