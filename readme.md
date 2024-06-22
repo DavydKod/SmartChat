@@ -27,6 +27,7 @@ The frontend will be available at http://localhost:3000.
 2. Install dependencies: `npm install`
 
 3. Create a .env file in the root of the backend directory and add the following environment variables:
+
    DB_URL=mongodb+srv://krylchuk:OBWfYallMHqaLJ9G@cluster0.q6u7aa6.mongodb.net/chat?retryWrites=true&w=majority&appName=Cluster0
 
    PORT=4000

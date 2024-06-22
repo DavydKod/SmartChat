@@ -155,7 +155,7 @@ const ChatInfo = ({ onClose, setShowChatInfo }) => {
                     <>
                         <h2 className="text-2xl mb-4 font-semibold">{currentChat.name}</h2>
                         <p className="mb-2">Number of users: {users.length + 1}</p>
-                        <p className="mb-4">Chat owner: {owner.name}</p>
+                        <p className="mb-4">Chat owner: {owner.name + " @" + owner.tag}</p>
                     </>
                 ) : (
                     <h2 className="text-2xl mb-4 font-semibold">Personal chat with {friend.name}</h2>
