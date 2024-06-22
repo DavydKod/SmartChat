@@ -52,7 +52,7 @@ const createPrivateChat = async (userId, receiverId) => {
 const createGroupChat = async (userId, memberIds, chatName) => {
     try {
         // Check if a group chat already exists with the exact same members
-        let chat = await chatModel.findOne({
+        /*let chat = await chatModel.findOne({
             'members.user': { $all: [userId, ...memberIds] },
             isGroup: true
         });
@@ -70,9 +70,9 @@ const createGroupChat = async (userId, memberIds, chatName) => {
                 });
 
             return chat;
-        }
+        }*/
 
-        // Create a new group chat if it doesn't exist
+        // Create a new group chat
         const members = [
             { user: userId, role: 'owner' },
             ...memberIds.map(id => ({ user: id, role: 'user' }))
